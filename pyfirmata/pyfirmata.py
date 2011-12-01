@@ -24,6 +24,7 @@ QUERY_FIRMWARE = 0x79       # query the firmware name
 SYSEX_PING = 0x03
 ANALOG_INPUT_REQUEST = 0x06
 DIGITAL_INPUT_REQUEST = 0x07
+BROADCAST_REPORT = 0x09
 
 
 SERVO_CONFIG = 0x70         # set max angle, minPulse, maxPulse, freq
@@ -70,27 +71,35 @@ class Board(object):
     _command = None
     _stored_data = []
     _parsing_sysex = False
-    nearest_obstacle=-1
+    nearest_obstacle=[-1 for i in range(128)]
     running=1
-    analog_value=-1
-    digital_value=-1
+    analog_value=[-1 for i in range(128)]
+    digital_value=[-1 for i in range(128)]
+    live_robots=[0 for i in range(128)]
     
     def __init__(self, port, layout, baudrate=57600, name=None):
-        self.sp = serial.Serial(port, baudrate)
-        # Allow 5 secs for Arduino's auto-reset to happen
-        # Alas, Firmata blinks it's version before printing it to serial
-        # For 2.3, even 5 seconds might not be enough.
-        # TODO Find a more reliable way to wait until the board is ready
-        self.pass_time(1)
-        self.name = name
-        if not self.name:
-            self.name = port
-        self.setup_layout(layout)
-        # Iterate over the first messages to get firmware data
-        while self.bytes_available():
-            self.iterate()
-        # TODO Test whether we got a firmware name and version, otherwise there 
-        # probably isn't any Firmata installed
+	try:        
+	    self.sp = serial.Serial(port, baudrate)
+            # Allow 5 secs for Arduino's auto-reset to happen
+            # Alas, Firmata blinks it's version before printing it to serial
+            # For 2.3, even 5 seconds might not be enough.
+            # TODO Find a more reliable way to wait until the board is ready
+            self.pass_time(1)
+            self.name = name
+            if not self.name:
+                self.name = port
+            self.setup_layout(layout)
+            # Iterate over the first messages to get firmware data
+            while self.bytes_available():
+                self.iterate()
+            # TODO Test whether we got a firmware name and version, otherwise there 
+            # probably isn't any Firmata installed
+	except serial.SerialException:
+	    print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
+	    exit(0)
+	    pass
+
+
         
     def __str__(self):
         return "Board %s on %s" % (self.name, self.sp.port)
@@ -149,7 +158,7 @@ class Board(object):
         self.add_cmd_handler(SYSEX_PING, self._handle_sysex_ping)
         self.add_cmd_handler(ANALOG_INPUT_REQUEST, self._handle_sysex_analog)
         self.add_cmd_handler(DIGITAL_INPUT_REQUEST, self._handle_sysex_digital)
-
+        self.add_cmd_handler(BROADCAST_REPORT, self._handle_sysex_broadcast)
     
     def add_cmd_handler(self, cmd, func):
         """ 
@@ -316,19 +325,26 @@ class Board(object):
         
     def _handle_sysex_ping(self, *data):
         major = data[0]
-        minor = data[1]        
-        self.nearest_obstacle= minor + major*128 
+        minor = data[1]      
+	robot = data[2]          
+        self.nearest_obstacle[robot]= minor + major*128 
 
 
     def _handle_sysex_analog(self, *data):
         major = data[0]
-        minor = data[1]        
-        self.analog_value= minor + major*128 
+        minor = data[1]
+	robot = data[2]      
+        self.analog_value[robot]= minor + major*128 
 
     def _handle_sysex_digital(self, *data):
         major = data[0]
-        self.digital_value= major 
+	robot = data[1]
+        self.digital_value[robot]= major 
 
+
+    def _handle_sysex_broadcast(self, *data):
+	robot = data[0]
+	self.live_robots[robot]=1
 
 class Port(object):
     """ An 8-bit port on the board """
