@@ -64,28 +64,28 @@ class Board:
         
     def analog(self,ch,samples=1,robotid=0): 
         self.board.send_sysex(6,[ch, samples, robotid])
-        self.board.pass_time(0.02)
+        self.board.pass_time(0.04)
         return self.board.analog_value[robotid]
 
     def battery(self,robotid): 
         self.board.send_sysex(6,[6, 1, robotid])
-        self.board.pass_time(0.02)
+        self.board.pass_time(0.04)
         return self.board.analog_value[robotid]*5.0/1024
 
     def digital(self,pin,robotid): 
         self.board.send_sysex(7,[pin,robotid])
-        self.board.pass_time(0.02)
+        self.board.pass_time(0.04)
         return self.board.digital_value[robotid]
         
-    def tone(self, freq=0, seconds=0, robotid=0):
+    def tone(self, freq=0, microseconds=0, robotid=0):
         hi=freq>>7
         lo=freq%128
         if freq!=0:
-            if duration==0:
+            if microseconds==0:
                 self.board.send_sysex(5,[hi, lo, robotid])
             else:
-                self.board.send_sysex(5,[hi, lo, int(seconds*1000), robotid])
-                self.board.pass_time(seconds)
+                self.board.send_sysex(5,[hi, lo, int(microseconds*1000), robotid])
+                #self.board.pass_time(microseconds)
 
         else:
             self.board.send_sysex(5,[robotid])
@@ -103,9 +103,11 @@ class Board:
         self.board.pass_time(0.02)
     
     def getLine(self, robotid):
-        a = self.analog(18)
-        b = self.analog(19)
+        a = self.analog(18,robotid=robotid)
+        b = self.analog(19,robotid=robotid)
         return (a,b)
+
+    wait = sleep
 
 class Robot:
     def __init__(self, board, robotid=0):
@@ -113,11 +115,14 @@ class Robot:
         self.robotid = robotid
         self.board = board
         self.name = ''
-
+        
+    def __del__(self):
+        self.board.exit()
+        
     ##MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
         '''El robot avanza con vel impulse durante seconds seconds.'''
-        self.board.motors(-(vel), -(vel), seconds, self.robotid)
+        self.board.motors(vel, vel, seconds, self.robotid)
 
     def backward(self, vel=-50, seconds=-1):
         '''El robot retrocede con velocidad vel durante seconds segundos.'''
@@ -149,33 +154,38 @@ class Robot:
 
     def battery(self):
         '''Devuelve el voltaje de las baterías del robot.'''
-        self.board.battery(self.robotid)
-        self.board.pass_time(0.02)
-        return self.board.analog_value*5.0/1024
+        return self.board.battery(self.robotid)
+
+    def ping(self):
+        return self.board.ping(self.robotid)
+
+    def tone(self, freq=0, seconds=0):
+        self.board.tone(freq, robotid=self.robotid)
+        self.board.wait(seconds)
+        self.board.tone(0, robotid=self.robotid)
+        
 
     def sensors(self):
         '''Imprime informacion de los sensores.'''
-        print 'Line1 = ' + str(self.analog(18))
-        print 'Line2 = ' + str(self.analog(19))
+        print 'Line = ' + str(self.getLine()) 
         print 'Obstaculo mas cercano = ' + str(self.ping()) + ' cm.'
-        print 'Pontenciometro = ' + str(self.analog(15))
         print 'Bateria = ' + str(self.battery()) + ' v.'
     
     ##Identificadores
-    def setid(self, newid):
+    def setId(self, newid):
         '''Setea el robotid'''
-        self.board(newid, self.robotid)
+        self.board.set_id(newid, self.robotid)
         self.robotid = newid
     
-    def setname(self, name):
+    def setName(self, name):
         '''Setea el nombre para el robot.'''
         self.name = str(name)
     
-    def getid(self):
+    def getId(self):
         '''Devuelve el robotid.'''
         return self.robotid
 
-    def getname(self):
+    def getName(self):
         '''Devuelve el nombre del robot.'''
         return self.name
 
