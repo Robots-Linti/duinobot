@@ -77,7 +77,7 @@ class Board:
         self.board.pass_time(0.04)
         return self.board.digital_value[robotid]
         
-    def tone(self, freq=0, microseconds=0, robotid=0):
+    def beep(self, freq=0, microseconds=0, robotid=0):
         hi=freq>>7
         lo=freq%128
         if freq!=0:
@@ -159,10 +159,10 @@ class Robot:
     def ping(self):
         return self.board.ping(self.robotid)
 
-    def tone(self, freq=0, seconds=0):
-        self.board.tone(freq, robotid=self.robotid)
+    def beep(self, freq=0, seconds=0):
+        self.board.beep(freq, robotid=self.robotid)
         self.board.wait(seconds)
-        self.board.tone(0, robotid=self.robotid)
+        self.board.beep(0, robotid=self.robotid)
         
 
     def sensors(self):
