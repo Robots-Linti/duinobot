@@ -188,6 +188,9 @@ class Robot:
     def getName(self):
         '''Devuelve el nombre del robot.'''
         return self.name
-
     
+    ## Otras funciones
+    def speak(s):
+        print s
+
 
