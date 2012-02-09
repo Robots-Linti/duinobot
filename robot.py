@@ -126,7 +126,7 @@ class Robot:
 
     def backward(self, vel=-50, seconds=-1):
         '''El robot retrocede con velocidad vel durante seconds segundos.'''
-        self.forward(impulse,seconds)
+        self.forward(-vel, seconds)
     
     def turnLeft(self, vel=50, seconds=-1):
        '''El robot gira a la izquierda con velocidad vel durante seconds segundos.'''
