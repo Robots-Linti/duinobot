@@ -126,16 +126,12 @@ class Robot:
 
     def backward(self, vel=-50, seconds=-1):
         '''El robot retrocede con velocidad vel durante seconds segundos.'''
-<<<<<<< HEAD
-        self.forward(-vel ,seconds)
+        self.forward(-vel, seconds)
     
     def motors(self, vel1, vel2, seconds=-1):
 		'''Permite mover las ruedas independientemente, con velocidad vel1 para un motor y vel2 para el otro motor, durante second'''
 		self.board.motors(vel1, vel2, self.robotid)
-=======
-        self.forward(-vel, seconds)
->>>>>>> 83b44a334a33df18b1b50331949c49e168defef5
-    
+
     def turnLeft(self, vel=50, seconds=-1):
        '''El robot gira a la izquierda con velocidad vel durante seconds segundos.'''
        self.board.motors(vel, 0, seconds, self.robotid)
