@@ -126,7 +126,11 @@ class Robot:
 
     def backward(self, vel=-50, seconds=-1):
         '''El robot retrocede con velocidad vel durante seconds segundos.'''
-        self.forward(impulse,seconds)
+        self.forward(-vel ,seconds)
+    
+    def motors(self, vel1, vel2, seconds=-1):
+		'''Permite mover las ruedas independientemente, con velocidad vel1 para un motor y vel2 para el otro motor, durante second'''
+		self.board.motors(vel1, vel2, self.robotid)
     
     def turnLeft(self, vel=50, seconds=-1):
        '''El robot gira a la izquierda con velocidad vel durante seconds segundos.'''
@@ -146,7 +150,8 @@ class Robot:
         return self.board.getLine(self.robotid)
 
     def getObstacle(self, distance=10):
-        '''Devuelve True si hay un obstaculo a menos de distance centimetros del robot.'''
+        '''Devuelve True si hay un obstaculo a menos de distance
+         centimetros del robot.'''
         if self.board.ping(self.robotid) < distance :
             return True
         else:
@@ -157,13 +162,18 @@ class Robot:
         return self.board.battery(self.robotid)
 
     def ping(self):
+        '''Devuelve la distancia en centimetros al objeto frente al robot'''
         return self.board.ping(self.robotid)
 
     def beep(self, freq=0, seconds=0):
+        '''Hace que el robot emita un pitido con frecuencia freq durante seconds segundos'''
         self.board.beep(freq, robotid=self.robotid)
         self.board.wait(seconds)
         self.board.beep(0, robotid=self.robotid)
         
+    def wait(self, seconds):
+        '''Produce un retardo de seconds segundos en los que el robot no hace nada'''
+        self.board.wait(seconds)
 
     def sensors(self):
         '''Imprime informacion de los sensores.'''
@@ -190,7 +200,8 @@ class Robot:
         return self.name
     
     ## Otras funciones
-    def speak(s):
-        print s
+    def speak(self, msj):
+        '''Imprime en la terminal el mensaje msj'''
+        print msj
 
 
