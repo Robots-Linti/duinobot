@@ -130,7 +130,7 @@ class Robot:
     
     def motors(self, vel1, vel2, seconds=-1):
 		'''Permite mover las ruedas independientemente, con velocidad vel1 para un motor y vel2 para el otro motor, durante second'''
-		self.board.motors(vel1, vel2, self.robotid)
+		self.board.motors(vel1, vel2, seconds, self.robotid)
 
     def turnLeft(self, vel=50, seconds=-1):
        '''El robot gira a la izquierda con velocidad vel durante seconds segundos.'''
