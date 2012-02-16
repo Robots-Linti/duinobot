@@ -96,8 +96,6 @@ class Board(object):
             # probably isn't any Firmata installed
 	except serial.SerialException:
 	    print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
-	    exit(0)
-	    pass
 
 
         
