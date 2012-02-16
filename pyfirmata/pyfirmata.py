@@ -72,7 +72,6 @@ class Board(object):
     _stored_data = []
     _parsing_sysex = False
     nearest_obstacle=[-1 for i in range(128)]
-    running=1
     analog_value=[-1 for i in range(128)]
     digital_value=[-1 for i in range(128)]
     live_robots=[0 for i in range(128)]
@@ -94,6 +93,7 @@ class Board(object):
                 self.iterate()
             # TODO Test whether we got a firmware name and version, otherwise there 
             # probably isn't any Firmata installed
+	    self.running = 1
 	except serial.SerialException:
 	    print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
 
@@ -112,9 +112,6 @@ class Board(object):
         
     def send_as_two_bytes(self, val):
         self.sp.write(chr(val % 128) + chr(val >> 7))
-
-    def running(self):
-        return self.running
 
     def setup_layout(self, board_layout):
         """

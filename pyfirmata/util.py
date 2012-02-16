@@ -37,11 +37,11 @@ class Iterator(threading.Thread):
     def run(self):
         while 1:
             try:
-                while self.board.bytes_available() and self.board.running():
+                while self.board.bytes_available() and self.board.running:
                     self.board.iterate()
                 time.sleep(0.001)
-		if self.board.running==0:	
-		    break
+                if not self.board.running:    
+                    return 
             except (AttributeError, serial.SerialException, OSError), e:
                 # this way we can kill the thread by setting the board object
                 # to None, or when the serial port is closed by board.exit()
