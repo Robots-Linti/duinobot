@@ -124,7 +124,7 @@ class Robot:
         '''El robot avanza con vel impulse durante seconds seconds.'''
         self.board.motors(vel, vel, seconds, self.robotid)
 
-    def backward(self, vel=-50, seconds=-1):
+    def backward(self, vel=50, seconds=-1):
         '''El robot retrocede con velocidad vel durante seconds segundos.'''
         self.forward(-vel, seconds)
     
