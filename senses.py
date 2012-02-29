@@ -46,11 +46,13 @@ def _updateModel(model, robot, event):
         model.lineRight.set(str(right))
         time.sleep(1)
 
+_root = None
 
 def _senses(robot):
-    root = tk.Tk()
+    global _root
+    _root = tk.Tk()
     model = SensesModel()
-    gui = SensesGUI(root, model)
+    gui = SensesGUI(_root, model)
     event = threading.Event()
     update = threading.Thread(target = _updateModel, args = (model, robot, event))
     update.start()    
@@ -59,8 +61,13 @@ def _senses(robot):
     event.set()
     # Wait update finishes
     update.join()
+    _root.quit()
+    _root = None
 
 def senses(robot):
+    global _robot
+    if _root:
+        return
     senses = threading.Thread(target = _senses, args = (robot,))
     senses.start()
 
