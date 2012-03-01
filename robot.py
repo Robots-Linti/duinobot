@@ -37,15 +37,15 @@ class Board:
         
     def motor0(self,vel,robotid):
         if(vel >= 0 and vel <= 100):
-            self.board.send_sysex(1,[vel, robotid])    
+            self.board.send_sysex(1,[int(vel), robotid])    
 
     def motor1(self,vel,robotid):
         if(vel >= 0 and vel <= 100):
-            self.board.send_sysex(2,[vel, robotid])   
+            self.board.send_sysex(2,[int(vel), robotid])   
             
     def motors(self,vel1, vel2, seconds=-1, robotid=0):
         if(abs(vel1)<=100 and abs(vel2)<=100):
-            self.board.send_sysex(4,[abs(vel1), abs(vel2), 1 if vel1>0 else 0, 1 if vel2>0 else 0, robotid])   
+            self.board.send_sysex(4,[int(abs(vel1)), int(abs(vel2)), 1 if vel1>0 else 0, 1 if vel2>0 else 0, robotid])   
             if seconds!=-1:
                 self.board.pass_time(seconds)
                 self.motors(0,0,-1,robotid)
