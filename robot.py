@@ -204,4 +204,5 @@ class Robot:
         '''Imprime en la terminal el mensaje msj'''
         print msj
 
-
+from senses import *
+Robot.senses = senses
