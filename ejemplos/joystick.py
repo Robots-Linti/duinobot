@@ -2,7 +2,7 @@
 import sys
 
 _vel = 50
-_tiempo = .5
+_tiempo = .3
 def pad_up():
 	print "Up"
 	r.forward(_vel, _tiempo)
@@ -42,6 +42,10 @@ r = Robot(b, 1)
 byte = joy.read(1)
 count = 0
 cmd = []
+def salir():
+	b.exit()
+	exit()
+jmap[0x000109] = salir
 while byte:
 	if count == 8:
 		try:
