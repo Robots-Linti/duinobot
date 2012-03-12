@@ -1,14 +1,16 @@
 #!/usr/bin/python
 #-*- encoding: utf-8 -*-
 
-import Tkinter as tk
+#import Tkinter as tk
 import threading
+import multiprocessing
 import time
 class SensesModel():
     def __init__(self):
         self.lineLeft = tk.StringVar()
         self.lineRight = tk.StringVar()
         self.ping = tk.StringVar()
+        self.battery = tk.StringVar()
 
 class SensesGUI():
     def __init__(self, root, model):
@@ -29,6 +31,11 @@ class SensesGUI():
         self.lineLeft.grid(row = 2, column = 0)
         self.lineRight = tk.Entry(self.frame)
         self.lineRight.grid(row = 2, column = 1)
+        label = tk.Label(self.frame)
+        label["text"] = "Medidor de batería: "
+        label.grid(row = 3, sticky = tk.W)
+        self.battery = tk.Entry(self.frame)
+        self.battery.grid(row = 3, column = 1)
         self.model = model
         self._setEntries()
         
@@ -36,43 +43,56 @@ class SensesGUI():
         self.lineLeft["textvariable"] = self.model.lineLeft
         self.lineRight["textvariable"] = self.model.lineRight
         self.ping["textvariable"] = self.model.ping
+        self.battery["textvariable"] = self.model.battery
 
+def _updateModel(model, messages, root):
+    values = messages.get()
+    if not values:
+        return
+    left, right = values["line"]
+    model.ping.set(str(values["ping"]))
+    model.lineLeft.set(str(left))
+    model.lineRight.set(str(right))
+    model.battery.set(str(values["battery"]))
+    root.after(1000, _updateModel, model, messages, root)
 
-def _updateModel(model, robot, event):
-    while not event.isSet():
-        left, right = robot.getLine()
-        model.ping.set(str(robot.ping()))
-        model.lineLeft.set(str(left))
-        model.lineRight.set(str(right))
-        time.sleep(1)
-
-_root = None
-
-def _senses(robot):
-    global _root
-    _root = tk.Tk()
+def _sensesDialog(messages):
+    global tk
+    import Tkinter # Tkinter must be imported in the process that uses it
+    tk = Tkinter
+    root = tk.Tk()
     model = SensesModel()
-    gui = SensesGUI(_root, model)
-    event = threading.Event()
-    update = threading.Thread(target = _updateModel, args = (model, robot, event))
-    update.start()    
-    tk.mainloop()
-    # When the window is closed set event, to make the update thread to finish
-    event.set()
-    # Wait update finishes
-    update.join()
-    _root.quit()
-    _root = None
+    gui = SensesGUI(root, model)
+    root.after_idle(_updateModel, model, messages, root)
+    root.mainloop()
+    root.quit()
+
+def _sendSensorsValues(robot):
+    messages = multiprocessing.Queue()
+    senses = multiprocessing.Process(target = _sensesDialog, args = (messages,))
+    senses.start()
+    while senses.is_alive():
+        values = {
+            "line": robot.getLine(),
+            "ping": robot.ping(),
+            "battery": robot.battery()
+        }
+        #values = {
+        #    "line": (1,1),
+        #    "ping": int(time.time() % 100),
+        #    "battery": int(time.time() % 100) 
+        #}
+        messages.put(values)
+        time.sleep(1)
+    senses.join()
 
 def senses(robot):
-    global _robot
-    if _root:
-        return
-    senses = threading.Thread(target = _senses, args = (robot,))
-    senses.start()
+    update = threading.Thread(target = _sendSensorsValues, args = (robot,))
+    update.start()    
 
 if __name__ == "__main__":
     from robot import *
     b = Board("/dev/ttyUSB0")
     r = Robot(b, 1)
+    #r = None
     senses(r)
