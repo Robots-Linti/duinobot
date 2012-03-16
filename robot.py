@@ -134,11 +134,11 @@ class Robot:
 
     def turnLeft(self, vel=50, seconds=-1):
        '''El robot gira a la izquierda con velocidad vel durante seconds segundos.'''
-       self.board.motors(vel, 0, seconds, self.robotid)
+       self.board.motors(vel, -vel, seconds, self.robotid)
 
     def turnRight(self, vel=50, seconds=-1):
         '''El robot gira a la derecha con velocidad vel durante seconds segundos.'''
-        self.board.motors(0, vel, seconds, self.robotid)
+        self.board.motors(-vel, vel, seconds, self.robotid)
 
     def stop(self):
         '''Detiene todo movimiento del robot inmediatamente'''
