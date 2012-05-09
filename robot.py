@@ -23,6 +23,7 @@
 ###############################################################################
 
 from pyfirmata import DuinoBot, util
+import time
 
 class Board:
     def __init__(self, device='/dev/ttyUSB0'):
@@ -94,9 +95,11 @@ class Board:
     	self.board.live_robots=[0 for i in range(128)]
         self.board.send_sysex(9,[])
         self.board.pass_time(0.5)
+        robotlist = []
         for i in range(128):
             if self.board.live_robots[i]:
-                print "Robot", i, "prendido"
+                robotlist.append(i)
+        return robotlist
 
     def set_id(self,new_id,robotid): 
         self.board.send_sysex(8,[new_id,robotid])
@@ -170,10 +173,6 @@ class Robot:
         self.board.beep(freq, robotid=self.robotid)
         self.board.wait(seconds)
         self.board.beep(0, robotid=self.robotid)
-        
-    def wait(self, seconds):
-        '''Produce un retardo de seconds segundos en los que el robot no hace nada'''
-        self.board.wait(seconds)
 
     def sensors(self):
         '''Imprime informacion de los sensores.'''
@@ -206,3 +205,7 @@ class Robot:
 
 from senses import *
 Robot.senses = senses
+
+def wait(seconds):
+	'''Produce un retardo de seconds segundos en los que el robot no hace nada'''
+	time.sleep(seconds)
