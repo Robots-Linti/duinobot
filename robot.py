@@ -168,7 +168,7 @@ class Robot:
         '''Devuelve la distancia en centimetros al objeto frente al robot'''
         return self.board.ping(self.robotid)
 
-    def beep(self, freq=0, seconds=0):
+    def beep(self, freq=200, seconds=0.25):
         '''Hace que el robot emita un pitido con frecuencia freq durante seconds segundos'''
         self.board.beep(freq, robotid=self.robotid)
         self.board.wait(seconds)
