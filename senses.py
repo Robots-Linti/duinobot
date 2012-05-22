@@ -104,7 +104,7 @@ def senses(robot):
     update.start()    
 
 if __name__ == "__main__":
-    from robot import *
+    from duinobot import *
     b = Board("/dev/ttyUSB0")
     r = Robot(b, 1)
     #r = None
