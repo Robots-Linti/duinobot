@@ -92,7 +92,7 @@ class Board:
             self.board.send_sysex(5,[robotid])
 
     def report(self): 
-    	self.board.live_robots=[0 for i in range(128)]
+        self.board.live_robots=[0 for i in range(128)]
         self.board.send_sysex(9,[])
         self.board.pass_time(0.5)
         robotlist = []
@@ -110,11 +110,16 @@ class Board:
         b = self.analog(19,robotid=robotid)
         return (a,b)
 
+    def getWheels(self, robotid):
+        a = self.analog(16,robotid=robotid)
+        b = self.analog(17,robotid=robotid)
+        return (a,b)
+
     wait = sleep
 
 class Robot:
     def __init__(self, board, robotid=0):
-        '''Inicializa el robot y lo asocia con la placa board'''
+        '''Inicializa el robot y lo asocia con la placa board.'''
         self.robotid = robotid
         self.board = board
         self.name = ''
@@ -124,7 +129,7 @@ class Robot:
         
     ##MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
-        '''El robot avanza con vel impulse durante seconds seconds.'''
+        '''El robot avanza con velocidad vel durante seconds segundos.'''
         self.board.motors(vel, vel, seconds, self.robotid)
 
     def backward(self, vel=50, seconds=-1):
@@ -132,8 +137,8 @@ class Robot:
         self.forward(-vel, seconds)
     
     def motors(self, vel1, vel2, seconds=-1):
-		'''Permite mover las ruedas independientemente, con velocidad vel1 para un motor y vel2 para el otro motor, durante second'''
-		self.board.motors(vel1, vel2, seconds, self.robotid)
+        '''Permite mover las ruedas independientemente, con velocidad vel1 para un motor y vel2 para el otro motor, durante second segundos.'''
+        self.board.motors(vel1, vel2, seconds, self.robotid)
 
     def turnLeft(self, vel=50, seconds=-1):
        '''El robot gira a la izquierda con velocidad vel durante seconds segundos.'''
@@ -144,13 +149,17 @@ class Robot:
         self.board.motors(-vel, vel, seconds, self.robotid)
 
     def stop(self):
-        '''Detiene todo movimiento del robot inmediatamente'''
+        '''Detiene todo movimiento del robot inmediatamente.'''
         self.board.motors(0, 0, robotid=self.robotid)
 
     ##SENSORES
     def getLine(self):
-        '''Devuelve los valores de los sensores de Line.'''
+        '''Devuelve los valores de los sensores de linea.'''
         return self.board.getLine(self.robotid)
+
+    def getWheels(self):
+        '''Devuelve el valor de los sensores de las ruedas.'''
+        return self.board.getWheels(self.robotid)
 
     def getObstacle(self, distance=10):
         '''Devuelve True si hay un obstaculo a menos de distance
@@ -165,18 +174,19 @@ class Robot:
         return self.board.battery(self.robotid)
 
     def ping(self):
-        '''Devuelve la distancia en centimetros al objeto frente al robot'''
+        '''Devuelve la distancia en centimetros al objeto frente al robot.'''
         return self.board.ping(self.robotid)
 
     def beep(self, freq=200, seconds=0.25):
-        '''Hace que el robot emita un pitido con frecuencia freq durante seconds segundos'''
+        '''Hace que el robot emita un pitido con frecuencia freq durante seconds segundos.'''
         self.board.beep(freq, robotid=self.robotid)
         self.board.wait(seconds)
         self.board.beep(0, robotid=self.robotid)
 
     def sensors(self):
         '''Imprime informacion de los sensores.'''
-        print 'Line = ' + str(self.getLine()) 
+        print 'Línea = ' + str(self.getLine()) 
+        print 'Ruedas = ' + str(self.getWheels())
         print 'Obstaculo mas cercano = ' + str(self.ping()) + ' cm.'
         print 'Bateria = ' + str(self.battery()) + ' v.'
     
@@ -200,12 +210,12 @@ class Robot:
     
     ## Otras funciones
     def speak(self, msj):
-        '''Imprime en la terminal el mensaje msj'''
+        '''Imprime en la terminal el mensaje msj.'''
         print msj
 
 from senses import *
 Robot.senses = senses
 
 def wait(seconds):
-	'''Produce un retardo de seconds segundos en los que el robot no hace nada'''
-	time.sleep(seconds)
+    '''Produce un retardo de seconds segundos en los que el robot no hace nada.'''
+    time.sleep(seconds)
