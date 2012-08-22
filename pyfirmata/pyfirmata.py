@@ -96,6 +96,7 @@ class Board(object):
 	    self.running = 1
 	except serial.SerialException:
 	    print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
+	    raise # re-raise the exception to allow the caller to handle this
 
 
         
@@ -194,10 +195,10 @@ class Board(object):
         # ok, should be available
         pin = part[pin_nr]
         self.taken[a_d][pin_nr] = True
-        if pin.type is DIGITAL:
+        if pin.type == DIGITAL:
             if bits[2] == 'p':
                 pin.mode = PWM
-            elif bits[2] is not 'o':
+            elif bits[2] != 'o':
                 pin.mode = INPUT
         else:
             pin.enable_reporting()
@@ -392,7 +393,7 @@ class Port(object):
         """
         if self.reporting:
             for pin in self.pins:
-                if pin.mode is INPUT:
+                if pin.mode == INPUT:
                     pin_nr = pin.pin_number - self.port_number * 8
                     pin.value = (mask & (1 << pin_nr)) > 1
 
@@ -418,12 +419,12 @@ class Pin(object):
         :arg mode: Can be one of the pin modes: INPUT, OUTPUT, ANALOG or PWM
         
         """
-        if mode is UNAVAILABLE:
+        if mode == UNAVAILABLE:
             self._mode = UNAVAILABLE
             return
-        if mode is PWM and not self.PWM_CAPABLE:
+        if mode == PWM and not self.PWM_CAPABLE:
             raise IOError, "%s does not have PWM capabilities" % self
-        if self._mode is UNAVAILABLE:
+        if self._mode == UNAVAILABLE:
             raise IOError, "%s can not be used through Firmata" % self
         self._mode = mode
         command = chr(SET_PIN_MODE)
@@ -440,7 +441,7 @@ class Pin(object):
     
     def enable_reporting(self):
         """ Set an input pin to report values """
-        if self.mode is not INPUT:
+        if self.mode != INPUT:
             raise IOError, "%s is not an input and can therefore not report" % self
         if self.type == ANALOG:
             self.reporting = True
@@ -477,13 +478,13 @@ class Pin(object):
             expects a float from 0 to 1 if the pin is in PWM mode.
         
         """
-        if self.mode is UNAVAILABLE:
+        if self.mode == UNAVAILABLE:
             raise IOError, "%s can not be used through Firmata" % self
-        if self.mode is INPUT:
+        if self.mode == INPUT:
             raise IOError, "%s is set up as an INPUT and can therefore not be written to" % self
-        if value is not self.value:
+        if value != self.value:
             self.value = value
-            if self.mode is OUTPUT:
+            if self.mode == OUTPUT:
                 if self.port:
                     self.port.write()
                 else:
@@ -491,7 +492,7 @@ class Pin(object):
                     msg += chr(self.pin_number)
                     msg += chr(value)
                     self.board.sp.write(msg)
-            elif self.mode is PWM:
+            elif self.mode == PWM:
                 value = int(round(value * 255))
                 msg = chr(ANALOG_MESSAGE + self.pin_number)
                 msg += chr(value % 128)

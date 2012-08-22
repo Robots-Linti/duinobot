@@ -101,7 +101,7 @@ class MockupPin(pyfirmata.Pin):
         super(MockupPin, self).__init__(*args, **kwargs)
     
     def read(self):
-        if self.value is None:
+        if self.value == None:
             try:
                 type = self.port and 'd' or 'a'
                 return self.values_dict[type][self.pin_number]
