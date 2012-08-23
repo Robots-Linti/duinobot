@@ -15,9 +15,6 @@
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
 
-import threading
-import multiprocessing
-import time
 class SensesModel():
     def __init__(self):
         self.lineLeft = tk.StringVar()
@@ -99,9 +96,19 @@ def _sendSensorsValues(robot):
         time.sleep(1)
     senses.join()
 
-def senses(robot):
-    update = threading.Thread(target = _sendSensorsValues, args = (robot,))
-    update.start()    
+import platform
+mayor, minor, revision = platform.python_version_tuple()
+if mayor != '2' or minor < '6':
+    print("El módulo senses precisa una versión de Python mayor o igual a 2.6 y menor a 3")
+    def senses(robot):
+        print("Función no disponible en esta versión de Python")
+else:
+    import threading
+    import multiprocessing
+    import time
+    def senses(robot):
+        update = threading.Thread(target = _sendSensorsValues, args = (robot,))
+        update.start()    
 
 if __name__ == "__main__":
     from duinobot import *
