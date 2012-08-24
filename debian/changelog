@@ -1,0 +1,74 @@
+robot (0.09-ff0) unstable; urgency=low
+
+  * Se agrega el módulo joystick.py.
+  * Se agrega la función boards().
+  * Se cambia el operador "is" por "==" en pyfirmata.
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Fri, 24 Aug 2012 19:08:54 -0300
+
+robot (0.09) unstable; urgency=low
+
+  * Agregada la función getWheelsB que devuelve un valor binario para los
+    tacómetros.
+  * Se agregó un ejemplo de uso
+  * Se eliminó el postinstall  
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Wed, 18 Jul 2012 14:27:50 -0300
+
+robot (0.08) unstable; urgency=low
+
+  * Se agregó como dependencia python-support que soluciona los problemas de
+    Ubuntu.
+  * Se vuelven atras los cambios de la revisión anterior.
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Thu, 12 Jul 2012 12:59:02 -0300
+
+robot (0.07) unstable; urgency=low
+
+  *Agregado el postinst para que genere los enlaces simbólicos en ubuntu
+   12.04
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Thu, 12 Jul 2012 11:26:07 -0300
+
+robot (0.06) unstable; urgency=low
+
+  *Cambiado el nombre del paquete python a duinobot por incompatibildades con
+   otro paquete.
+  *Agregada la función getWheel() a Robot y a Board para que devuelvan los
+   valores de los sensores de linea conectados a S0 y S1
+  *Cambiados los valores por defecto de beep() para que emita un sonido
+   audible (freq=200, seconds=0.25)
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Tue, 22 May 2012 14:28:42 -0300
+
+robot (0.05) unstable; urgency=low
+
+  *Agregada como dependencia python-tk
+  *La función Board.report() ahora devuelve una lista de ids
+  *wait(seconds) ahora es una función del módulo y no de Robot 
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Fri, 13 Apr 2012 13:03:18 -0300
+
+robot (0.04) unstable; urgency=low
+
+  * Corregido el path para los ejemplos
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Fri, 23 Mar 2012 14:14:15 -0300
+
+robot (0.03) unstable; urgency=low
+
+  * Modificaciones al setup.py para instalar pyfirmata 
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Fri, 23 Mar 2012 13:44:27 -0300
+
+robot (0.02) unstable; urgency=low
+
+  * Agregado el setup.py
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Thu, 22 Mar 2012 16:50:57 -0300
+
+robot (0.01) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Joaquin Bogado <jbogado at linti.unlp.edu.ar>  Thu, 22 Mar 2012 15:53:38 -0300

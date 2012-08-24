@@ -114,7 +114,7 @@ class Board:
         a = self.analog(16,robotid=robotid)
         b = self.analog(17,robotid=robotid)
         return (a,b)
-
+    
     wait = sleep
 
 class Robot:
@@ -160,6 +160,10 @@ class Robot:
     def getWheels(self):
         '''Devuelve el valor de los sensores de las ruedas.'''
         return self.board.getWheels(self.robotid)
+
+    def getWheelsB(self):
+        (r,l) = self.getWheels()
+        return (r/500,l/500)
 
     def getObstacle(self, distance=10):
         '''Devuelve True si hay un obstaculo a menos de distance

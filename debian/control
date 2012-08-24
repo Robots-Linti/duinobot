@@ -1,0 +1,14 @@
+Source: robot
+Section: devel
+Priority: extra
+Maintainer: Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: http://lihuen.linti.unlp.edu.ar
+
+Package: robot
+Architecture: all
+Depends: ${misc:Depends}, python-serial, python-tk, python-support, python-pygame
+Description: API en Python para el robot Multiplo N6
+ Este paquete instala los módulos necesarios para permitir la programación
+  del robot Múltiplo N6 en forma interactiva, sin bajar código al robot.
