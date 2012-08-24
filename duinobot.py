@@ -26,7 +26,6 @@ from pyfirmata import DuinoBot, util
 import time,re, os
 
 class Board:
-    __devPattern = re.compile(r"^ttyUSB\d+$")
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
         self.board = DuinoBot(device)
@@ -36,11 +35,6 @@ class Board:
 
     def __del__(self):
         self.exit()
-
-    @classmethod
-    def devices(cls):
-        matching = filter(cls.__devPattern.match, os.listdir("/dev"))
-	return map(lambda s: "/dev/" + s, matching)
 
     def motor0(self,vel,robotid):
         if(vel >= 0 and vel <= 100):
@@ -225,3 +219,8 @@ Robot.senses = senses
 def wait(seconds):
     '''Produce un retardo de seconds segundos en los que el robot no hace nada.'''
     time.sleep(seconds)
+
+__devPattern = re.compile(r"^ttyUSB\d+$")
+def boards():
+    matching = filter(__devPattern.match, os.listdir("/dev"))
+    return map(lambda s: "/dev/" + s, matching)
