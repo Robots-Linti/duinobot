@@ -25,7 +25,7 @@ def joysticks():
 	joys = []
 	for id in range(pygame.joystick.get_count()):
 		j = pygame.joystick.Joystick(id)
-		joys = (id, j.get_name())
+		joys.append((id, j.get_name(),))
 		j.quit()
 	return joys
 
