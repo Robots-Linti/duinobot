@@ -1,3 +1,9 @@
+robot (0.09-ff1) unstable; urgency=low
+
+  * joysticks() devolvía una tupla en lugar de una lista de tuplas.
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Wed, 29 Aug 2012 13:49:05 -0300
+
 robot (0.09-ff0) unstable; urgency=low
 
   * Se agrega el módulo joystick.py.
