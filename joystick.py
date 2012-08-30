@@ -19,9 +19,15 @@
 ###############################################################################
 
 import pygame
-pygame.init()
+
+pygame.joystick.init()
+
+
+
+
 def joysticks():
 	"Retorna una lista joysticks conectados"
+	Joystick._Joystick__refresh()
 	joys = []
 	for id in range(pygame.joystick.get_count()):
 		j = pygame.joystick.Joystick(id)
@@ -31,9 +37,25 @@ def joysticks():
 
 class Joystick:
 	"Permite controlar un robot con un joystick"
+	joystickDetected = pygame.joystick.get_count() > 0
+	@classmethod
+	def __refresh(cls):
+		"""Esta función permite conectar el joystick aun después de haber
+		importado el módulo, pero solo tendrá efecto una vez luego de
+		detectar algún joystick (es decir si se conectan o desconectan
+		joysticks más tarde la función no tendrá efecto)"""
+		if pygame.joystick.get_count() == 0 and not Joystick.joystickDetected:
+			pygame.joystick.quit()
+			pygame.joystick.init()
+			Joystick.joystickDetected = pygame.joystick.get_count() > 0
+
+
+		
+	
 	def __init__(self, robot, joystickNumber=0):
 		"""Crea un joystick asociado con un objeto Robot, si
 		no se idica el numero de joystick se asume 0"""
+		Joystick.__refresh()
 		self.js = pygame.joystick.Joystick(joystickNumber)
 		self.js.init()
 		self.robot = robot
