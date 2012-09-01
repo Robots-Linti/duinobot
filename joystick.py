@@ -19,11 +19,8 @@
 ###############################################################################
 
 import pygame
-
-pygame.joystick.init()
-
-
-
+// Inicializar solamente el Joystick es más rápido pero suele fallar
+pygame.init()
 
 def joysticks():
 	"Retorna una lista joysticks conectados"
