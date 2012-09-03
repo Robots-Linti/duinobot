@@ -1,3 +1,11 @@
+robot (0.10) unstable; urgency=low
+
+  * joystick.py: paso a inicializar pygame en lugar de pygame.joystick.
+  * duinobot.py: los métodos de Board pasan a a estar protegidos con un Lock.
+  * senses.py: cambio getLine() por getWheels().
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Mon, 03 Sep 2012 11:31:39 -0300
+
 robot (0.09-ff1) unstable; urgency=low
 
   * joysticks() devolvía una tupla en lugar de una lista de tuplas.

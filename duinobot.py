@@ -6,6 +6,7 @@
 # pueda programarse en forma interactiva, sin necesidad de bajar firmware al
 # robot. Sin embargo es necesario el soporte del firmware del lado del robot
 #
+# Copyright (C) 2012 Fernando Lopez <flopez AT linti.unlp.edu.ar>
 # Copyright (C) 2011 David Vilaseca <http://www.robotgroup.com.ar>
 # Copyright (C) 2011 Joaquín Bogado <jbogado en linti.unlp.edu.ar>
 # 

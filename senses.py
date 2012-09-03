@@ -17,8 +17,8 @@
 
 class SensesModel():
     def __init__(self):
-        self.lineLeft = tk.StringVar()
-        self.lineRight = tk.StringVar()
+        self.wheelLeft = tk.StringVar()
+        self.wheelRight = tk.StringVar()
         self.ping = tk.StringVar()
         self.battery = tk.StringVar()
 
@@ -35,12 +35,12 @@ class SensesGUI():
         self.ping = tk.Entry(self.frame)
         self.ping.grid(row = 0, column = 1)
         label = tk.Label(self.frame)
-        label["text"] = "Sensores de línea:"
+        label["text"] = "Sensores de las ruedas:"
         label.grid(row = 1, columnspan = 2)
-        self.lineLeft = tk.Entry(self.frame)
-        self.lineLeft.grid(row = 2, column = 0)
-        self.lineRight = tk.Entry(self.frame)
-        self.lineRight.grid(row = 2, column = 1)
+        self.wheelLeft = tk.Entry(self.frame)
+        self.wheelLeft.grid(row = 2, column = 0)
+        self.wheelRight = tk.Entry(self.frame)
+        self.wheelRight.grid(row = 2, column = 1)
         label = tk.Label(self.frame)
         label["text"] = "Medidor de batería: "
         label.grid(row = 3, sticky = tk.W)
@@ -50,8 +50,8 @@ class SensesGUI():
         self._setEntries()
         
     def _setEntries(self):
-        self.lineLeft["textvariable"] = self.model.lineLeft
-        self.lineRight["textvariable"] = self.model.lineRight
+        self.wheelLeft["textvariable"] = self.model.wheelLeft
+        self.wheelRight["textvariable"] = self.model.wheelRight
         self.ping["textvariable"] = self.model.ping
         self.battery["textvariable"] = self.model.battery
 
@@ -59,10 +59,10 @@ def _updateModel(model, messages, root):
     values = messages.get()
     if not values:
         return
-    left, right = values["line"]
+    wleft, wright = values["wheels"]
     model.ping.set(str(values["ping"]))
-    model.lineLeft.set(str(left))
-    model.lineRight.set(str(right))
+    model.wheelLeft.set(str(wleft))
+    model.wheelRight.set(str(wright))
     model.battery.set(str(values["battery"]))
     root.after(1000, _updateModel, model, messages, root)
 
@@ -83,7 +83,7 @@ def _sendSensorsValues(robot):
     senses.start()
     while senses.is_alive():
         values = {
-            "line": robot.getLine(),
+            "wheels": robot.getWheels(),
             "ping": robot.ping(),
             "battery": robot.battery()
         }
