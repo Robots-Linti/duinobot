@@ -6,7 +6,7 @@
 # pueda programarse en forma interactiva, sin necesidad de bajar firmware al
 # robot. Sin embargo es necesario el soporte del firmware del lado del robot
 #
-# Copyright (C) 2012 Fernando Lopez <flopez AT linti.unlp.edu.ar>
+# Copyright (C) 2012 Fernando López <flopez AT linti.unlp.edu.ar>
 # Copyright (C) 2011 David Vilaseca <http://www.robotgroup.com.ar>
 # Copyright (C) 2011 Joaquín Bogado <jbogado en linti.unlp.edu.ar>
 # 
@@ -25,8 +25,10 @@
 
 from pyfirmata import DuinoBot, util
 import time,re, os
+import threading
 
-class Board:
+class Board(object):
+    lock = threading.Lock()
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
         self.board = DuinoBot(device)
@@ -36,6 +38,14 @@ class Board:
 
     def __del__(self):
         self.exit()
+    
+    def __getattribute__(self, name):
+        '''Permitir multithreading para evitar problemas con el método
+        senses'''
+        Board.lock.acquire()
+        res = object.__getattribute__(self, name)
+        Board.lock.release()
+        return res
 
     def motor0(self,vel,robotid):
         if(vel >= 0 and vel <= 100):
