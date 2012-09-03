@@ -1,6 +1,7 @@
 import serial
 import inspect
 import time
+import os
 from util import two_byte_iter_to_str
 
 # Message command bytes - straight from Firmata.h
@@ -95,10 +96,11 @@ class Board(object):
             # probably isn't any Firmata installed
 	    self.running = 1
 	except serial.SerialException:
-	    print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
+	    if os.path.exists(port) and not os.access(port, os.R_OK | os.W_OK):
+	    	print "No tiene permisos para acceder al dispositivo, verifique si su usuario pertenece al grupo dialout"
+	    else:
+	    	print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
 	    raise # re-raise the exception to allow the caller to handle this
-
-
         
     def __str__(self):
         return "Board %s on %s" % (self.name, self.sp.port)

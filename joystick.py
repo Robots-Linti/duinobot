@@ -19,7 +19,7 @@
 ###############################################################################
 
 import pygame
-// Inicializar solamente el Joystick es más rápido pero suele fallar
+# Inicializar solamente el Joystick es más rápido pero suele fallar
 pygame.init()
 
 def joysticks():
