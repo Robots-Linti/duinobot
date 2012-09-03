@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Problema en Ubuntu: http://ten.homelinux.net/productivity/recipes/Arduino%20does%20not%20see%20ttyUSB0
+if [ -f "/lib/udev/rules.d/95-upower-wup.rules" ]; then
+	sed -i -r 's/^([^#])/\#\1/g' /lib/udev/rules.d/95-upower-wup.rules
+	/etc/init.d/udev restart || true
+	killall upowerd || true
+fi
+
