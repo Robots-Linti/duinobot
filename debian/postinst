@@ -9,7 +9,8 @@ fi
 
 # Automatically added by dh_pysupport
 if which update-python-modules >/dev/null 2>&1; then
-	update-python-modules  robot
+	#update-python-modules  robot
+	update-python-modules /usr/share/python-support/robot.public
 fi
 # End automatically added section
 

@@ -13,4 +13,5 @@
 	dh $@
 
 install-*:
-	dh_python2 $@
+	#dh_python2 $@
+	dh_pysupport $@
