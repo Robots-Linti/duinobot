@@ -43,7 +43,11 @@ class Board(object):
         '''Permitir multithreading para evitar problemas con el método
         senses'''
         Board.lock.acquire()
-        res = object.__getattribute__(self, name)
+	try:
+        	res = object.__getattribute__(self, name)
+	except:
+		Board.lock.release()
+		raise
         Board.lock.release()
         return res
 
