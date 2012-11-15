@@ -1,3 +1,11 @@
+robot (0.11) unstable; urgency=low
+
+   * duinobot.py: Deadlock luego de alguna excepción en un Board resuelto.
+   * duinobot.py: Beep asincrónico en la clase Robot cuando no se pasa
+   como argumento el tiempo.
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Thu, 15 Nov 2012 14:20:30 -0300
+
 robot (0.10) unstable; urgency=low
 
   * joystick.py: paso a inicializar pygame en lugar de pygame.joystick.
