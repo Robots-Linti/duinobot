@@ -43,11 +43,11 @@ class Board(object):
         '''Permitir multithreading para evitar problemas con el método
         senses'''
         Board.lock.acquire()
-	try:
-        	res = object.__getattribute__(self, name)
-	except:
-		Board.lock.release()
-		raise
+        try:
+            res = object.__getattribute__(self, name)
+        except:
+            Board.lock.release()
+            raise
         Board.lock.release()
         return res
 
@@ -102,7 +102,6 @@ class Board(object):
             else:
                 self.board.send_sysex(5,[hi, lo, int(microseconds*1000), robotid])
                 #self.board.pass_time(microseconds)
-
         else:
             self.board.send_sysex(5,[robotid])
 
@@ -199,9 +198,9 @@ class Robot:
     def beep(self, freq=200, seconds=0):
         '''Hace que el robot emita un pitido con frecuencia freq durante seconds segundos.'''
         self.board.beep(freq, robotid=self.robotid)
-	if seconds > 0:
-        	self.board.wait(seconds)
-        	self.board.beep(0, robotid=self.robotid)
+        if seconds > 0:
+            self.board.wait(seconds)
+            self.board.beep(0, robotid=self.robotid)
 
     def sensors(self):
         '''Imprime informacion de los sensores.'''
