@@ -182,10 +182,12 @@ class Robot:
     def getObstacle(self, distance=10):
         '''Devuelve True si hay un obstaculo a menos de distance
          centimetros del robot.'''
-        if self.board.ping(self.robotid) < distance :
-            return True
-        else:
+        ping = self.ping()
+        if ping < 0:
+            # Consideramos que una lectura fallida
+            # del sensor retorna -1
             return False
+        return ping < distance
 
     def battery(self):
         '''Devuelve el voltaje de las baterías del robot.'''
