@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
+# (C) Fernando López <flopez [AT] linti.unlp.edu.ar>
 import sys
 import threading
 import atexit
 import time
 import Queue as queue
 import Tkinter as tk
-import cv
+import cv2
 import signal
 import copy
 import PIL
@@ -85,49 +86,6 @@ def _ipl2pil(frame):
         )
 
 
-class WebCam(object):
-	def __init__(self, index = 0):
-		self.index = index
-		self.capture = cv.CaptureFromCAM(self.index)
-	def takePicture(self):
-		return Picture(_ipl2pil(cv.QueryFrame(self.capture)))
 
-showWindow = None
 
-class Picture(object):
-	def __init__(self, pilimage):
-		self.image = pilimage
-	def show(self):
-		def doShow():
-			global showWindow, showLabel
-			if not showWindow:
-				showWindow = tk.Toplevel()
-				showWindow.grid()
-				showLabel = tk.Label(showWindow)
-        			showLabel.pack()
-				showLabel.photoref = None
-			# Variable de instancia para evitar al Garbage Collector (es un bug de ImageTk)
-			if not showLabel.photoref:
-				showLabel.photoref =  ImageTk.PhotoImage(self.image)
-				showLabel.configure(image = showLabel.photoref)
-			else:
-				showLabel.photoref.paste(self.image)
-		_request_queue.put(doShow)
-		# Para darle una chance de ejecutarse al otro thread
-		# hay que hacer una operación bloqueante:
-		time.sleep(.1)
 
-#a = raw_input()
-s = Senses(2)
-w = WebCam()
-for i in xrange(100):
-	picture = w.takePicture()
-	picture.show()
-#b = raw_input()
-#try:
-#	while True:
-#		time.sleep(1)
-#except KeyboardInterrupt:
-#	pass
-
-time.sleep(5)
