@@ -57,6 +57,24 @@ class Picture(object):
 		# hay que hacer una operación bloqueante:
 		time.sleep(.1)
 
+class Senses(object):
+	def __init__(self, robot):
+		def senses():
+			if not self.window:
+				self.window = tk.Toplevel()
+				self.window.title("Senses robot {1}".format(self.robot))
+				self.window.grid()
+				label = tk.Label(self.window, text = "Ping:")
+				label.grid(row = 0, sticky = tk.W)
+				self.ping = tk.Entry(self.frame)
+				self.ping.grid(row = 0, column = 1)
+				label = tk.Label(self.window, text = "Wheels:")
+				label.grid(row = 1, columnspan = 2)
+				_request_queue
+			self.ping["textvariable"] = self.robot.ping()
+		self.window = None	
+		self.robot = robot
+
 if __name__ == "__main__":
 	w = Webcam()
 	for i in xrange(100):
