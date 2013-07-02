@@ -8,28 +8,35 @@ import PIL
 import PIL.Image
 import ImageTk
 
-from gui_events import _request_queue
+from gui_events import _request_queue #, _tk_root, TK_AFTER_INTERVAL
+import threading
 
 class Webcam(object):
-	discard_frames = 30
+	discard_frames = 10
 	def __init__(self, index = 0):
 		self.index = index
-	#	self.capture = cv2.VideoCapture(self.index)
-	#def takePicture(self):
-	#	for i in xrange(5):
-	#		# 5 intentos para una captura exitosa
-	#		ret, im = self.capture.read()
-	#		if ret:
-	#			break
-	#	return Picture(im)
-	def takePicture(self):
 		self.capture = cv2.VideoCapture(self.index)
-		for i in xrange(Webcam.discard_frames):
-			# Descarta 30 frames para que la camara se ajuste a la luminosidad
-			ret, im = self.capture.read()
-		self.capture.release()
-		return Picture(im) if ret else None
+		self.working = True
+		self.ending = False
+		self.lock = threading.Lock()
+		def keepBufferEmpty():
+			if not self.working:
+				self.ending = True
+				return
+			self.capture.grab()
+			_request_queue.put(keepBufferEmpty)
+		_request_queue.put(keepBufferEmpty)
 
+	def __del__(self):
+		self.working = False
+		while not self.ending:
+			time.sleep(0.5)
+
+	def takePicture(self):
+		#self.lock.acquire()
+		ret, im = self.capture.retrieve()
+		#self.lock.release()
+		return Picture(im) if ret else None
 showWindow = None
 
 class Picture(object):

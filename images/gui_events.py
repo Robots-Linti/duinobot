@@ -56,14 +56,16 @@ def _tk_attend_requests():
 		# Terminar el thread desde adentro
 		_tk_root.quit()
 		exit()
-	try:
-		request = _request_queue.get(block=False)
-	except queue.Empty:
-		pass
-	else:
-		_tk_root.after(0, request)
-	finally:
-		_tk_root.after(TK_AFTER_INTERVAL, _tk_attend_requests)
+	strike = 1
+	while True:
+		try:
+			request = _request_queue.get(block=False)
+		except queue.Empty:
+			break
+		else:
+			_tk_root.after(TK_AFTER_INTERVAL * strike, request)
+			strike += 1
+	_tk_root.after(TK_AFTER_INTERVAL, _tk_attend_requests)
 
 class Senses(object):
 	def __init__(self, robot):
