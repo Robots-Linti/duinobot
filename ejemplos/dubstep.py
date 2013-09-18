@@ -12,14 +12,44 @@ if pid == 0:
 	salida = os.open('/dev/null', os.O_WRONLY)
 	os.dup2(salida, 2)
 	os.dup2(salida, 1)
-	os.execlp('mplayer', 'mplayer', '-nojoystick', 'PDF_-_XXL080808.mp3')
+	os.execlp('mplayer', 'mplayer', '-nojoystick', 'ArenaOfElectronicMusicRazormanMechanical.mp3')
 
 def uno(t):
-	r1.turnLeft(40, t)
+	lr1,lr2 = r1,r2
+	while t > 0:
+		lr1.forward(80)		
+		lr2.turnRight(40, 0.5)
+		lr1.backward(80)		
+		lr2.turnLeft(40, 0.5)		
+		lr1.stop()
+		lr1, lr2 = lr2, lr1
+		t -= 1	
 def dos(t):
-	r1.turnRight(40)
-	r2.turnLeft(40)
-	wait(t)
+	lr1,lr2 = r1,r2
+	
+	
+	while t > 0:
+		lr1.turnRight(60)
+		lr2.turnLeft(60, 2)
+			
+		lr2.backward(30)	
+		lr1.forward(60, 1)		
+		lr2.stop()
+		lr1, lr2 = lr2, lr1
+		t -= 3	
+def tres(t):
+	lr1,lr2 = r1,r2
+	
+	
+	while t > 0:
+		lr1.turnRight(60)
+		lr2.turnLeft(60, 2)
+			
+		lr2.backward(30)	
+		lr1.forward(60, 1)		
+		lr2.stop()
+		lr1, lr2 = lr2, lr1
+		t -= 3	
 def pausa(t):
 	r1.stop()
 	r2.stop()
@@ -61,22 +91,22 @@ def despacito(t):
 	wait(t)
 
 pasos = [
-	(21, uno),
-	(50, dos),
-	(56, pausa),
-	(60 + 25, dosRapido),
-	(120 + 30, punchi),
-	(120 + 50, masTranqui),
-	(180 + 12, pausa),
-	(180 + 35, despacito),
-	(300 + 35, punchi),
-	(300 + 45, masTranqui),
-	(0, pausa)
+	(27, uno),
+	(47 - 28, dos),
+	#(56, pausa),
+	#(60 + 25, dosRapido),
+	#(120 + 30, punchi),
+	#(120 + 50, masTranqui),
+	#(180 + 12, pausa),
+	#(180 + 35, despacito),
+	#(300 + 35, punchi),
+	#(300 + 45, masTranqui),
+	#(0, pausa)
 ]
-anterior = 0
+
 for tiempo, paso in pasos:
 	print(str(paso))
-	paso(tiempo - anterior)
-	anterior = tiempo
+	paso(tiempo)
+	
 
 b.exit()
