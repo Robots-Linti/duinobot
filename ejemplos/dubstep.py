@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 #http://www.jamendo.com/es/track/324954/xxl080808
+#http://www.jamendo.com/es/track/247586/razorman-mechanical
 from duinobot import *
 import os
 b = Board()
@@ -59,8 +60,9 @@ def pausa(t):
 		lr1.beep(200, sonido)		
 		lr2.beep(1200,sonido)
 		lr1, lr2 = lr2, lr1
-		sonido = 0.1
-		t -= 1
+		t -= 2*sonido 
+		sonido -= 0.1
+		
 	#if t != 0:
 	#	wait(t)
 def dosRapido(t):
