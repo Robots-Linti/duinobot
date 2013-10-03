@@ -6,7 +6,7 @@ from duinobot import *
 import os
 b = Board()
 r1 = Robot(b, 5)
-r2 = Robot(b, 0)
+r2 = Robot(b, 18)
 
 pid = os.fork()
 if pid == 0:
@@ -31,79 +31,60 @@ def dos(t):
 	
 	while t > 0:
 		lr1.turnRight(60)
-		lr2.turnLeft(60, 2)
+		lr2.turnLeft(70, 0.5)
 			
 		lr2.backward(30)	
-		lr1.forward(60, 1)		
+		lr1.forward(70, 0.5)		
 		lr2.stop()
 		lr1, lr2 = lr2, lr1
-		t -= 3	
+		t -= 1	
 def tres(t):
+	
 	lr1,lr2 = r1,r2
-	
-	
 	while t > 0:
-		lr1.turnRight(60)
-		lr2.turnLeft(60, 2)
+		lr2.turnRight(60)
+		lr1.forward(30, 4)
 			
-		lr2.backward(30)	
-		lr1.forward(60, 1)		
-		lr2.stop()
-		lr1, lr2 = lr2, lr1
-		t -= 3	
+		lr1.backward(30)	
+		lr2.turnLeft(60, 4)		
+		lr1.stop()
+		t -= 8
 def pausa(t):
+	print "acomodar Robots!!"
 	r1.stop()
 	r2.stop()
 	lr1,lr2 = r1,r2
 	sonido = 0.9
-	while t > 0:
+	while t > 0 and sonido > 0:
 		lr1.beep(200, sonido)		
 		lr2.beep(1200,sonido)
 		lr1, lr2 = lr2, lr1
 		t -= 2*sonido 
-		sonido -= 0.1
-		
+		sonido -= 0.1	
 	#if t != 0:
 	#	wait(t)
-def dosRapido(t):
-	pasito = t / 16.0
-	lr1, lr2 = r1, r2
-	for i in range(16):
-		lr1.turnLeft(100)
-		restante = pasito
-		while restante > 0:
-			lr2.forward(60, .5)
-			lr2.backward(30, .5)
-			restante -= 1
-		lr1, lr2 = lr2, lr1
+
 def punchi(t):
 	lr1, lr2 = r1, r2
 	while t > 0:
-		lr1.turnLeft(100, .5)
+		lr1.beep(200)
+		lr1.turnLeft(100)
 		lr2.turnRight(100, .5)
+		lr1.beep(0)
+		lr1.stop()
 		lr1, lr2 = lr2, lr1
-		t -= 1
-def masTranqui(t):
-	r1.motors(60, -40)
-	r2.motors(-40, 60)
-	wait(t)
-def despacito(t):
-	r1.motors(40, -30)
-	r2.motors(-30, 40)
-	wait(t)
+		t -= 0.5
 
 pasos = [
 	(27, uno),
 	(47 - 28, dos),
-	#(56, pausa),
-	#(60 + 25, dosRapido),
-	#(120 + 30, punchi),
-	#(120 + 50, masTranqui),
-	#(180 + 12, pausa),
-	#(180 + 35, despacito),
-	#(300 + 35, punchi),
-	#(300 + 45, masTranqui),
-	#(0, pausa)
+	(55 - 47, pausa),
+	(65 - 55, tres),
+	(75 - 65, dos),
+	(81 - 75, punchi),
+	(91- 81, pausa),
+	(110 - 91, uno),
+	(120 - 110, punchi),
 ]
 
 for tiempo, paso in pasos:
