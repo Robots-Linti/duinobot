@@ -1,3 +1,10 @@
+robot (0.11-2~event-loop1) UNRELEASED; urgency=low
+
+  * Reemplazando threads por greenlets con gevent para evitar los
+  problemas que traen los threads al terminar el programa.
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Tue, 03 Dec 2013 14:46:21 -0300
+
 robot (0.11-2) unstable; urgency=low
 
   * setup.py: Path relativo para que instale con virtualenv.

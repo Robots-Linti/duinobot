@@ -25,10 +25,10 @@
 
 from pyfirmata import DuinoBot, util
 import time,re, os
-import threading
+import gevent.lock
 
 class Board(object):
-    lock = threading.Lock()
+    lock = gevent.lock.Semaphore()
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
         self.board = DuinoBot(device)

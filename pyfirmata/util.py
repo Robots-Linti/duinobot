@@ -1,4 +1,4 @@
-import threading
+import gevent
 import serial
 import time
 import os
@@ -29,12 +29,12 @@ def get_the_board(layout=BOARDS['arduino'], base_dir='/dev/', identifier='tty.us
         raise IOError, "More than one board found!"
     return boards[0]
 
-class Iterator(threading.Thread):
+class Iterator(gevent.Greenlet):
     def __init__(self, board):
         super(Iterator, self).__init__()
         self.board = board
         
-    def run(self):
+    def _run(self):
         while 1:
             try:
                 while self.board.bytes_available() and self.board.running:

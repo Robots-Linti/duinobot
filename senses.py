@@ -78,8 +78,8 @@ def _sensesDialog(messages):
     root.quit()
 
 def _sendSensorsValues(robot):
-    messages = multiprocessing.Queue()
-    senses = multiprocessing.Process(target = _sensesDialog, args = (messages,))
+    messages = gevent.queue.Queue()
+    senses = gevent.Greenlet(target = _sensesDialog, args = (messages,))
     senses.start()
     while senses.is_alive():
         values = {
@@ -103,11 +103,11 @@ if mayor != '2' or minor < '6':
     def senses(robot):
         print("Función no disponible en esta versión de Python")
 else:
-    import threading
-    import multiprocessing
+    import gevent
+    import gevent.queue
     import time
     def senses(robot):
-        update = threading.Thread(target = _sendSensorsValues, args = (robot,))
+        update = gevent.Greenlet(target = _sendSensorsValues, args = (robot,))
         update.start()    
 
 if __name__ == "__main__":
