@@ -3,6 +3,7 @@ import inspect
 import time
 import os
 from util import two_byte_iter_to_str
+import gevent
 
 # Message command bytes - straight from Firmata.h
 DIGITAL_MESSAGE = 0x90      # send data for a digital pin
@@ -78,8 +79,8 @@ class Board(object):
     live_robots=[0 for i in range(128)]
     
     def __init__(self, port, layout, baudrate=57600, name=None):
-	try:        
-	    self.sp = serial.Serial(port, baudrate)
+        try:        
+            self.sp = serial.Serial(port, baudrate)
             # Allow 5 secs for Arduino's auto-reset to happen
             # Alas, Firmata blinks it's version before printing it to serial
             # For 2.3, even 5 seconds might not be enough.
@@ -94,13 +95,13 @@ class Board(object):
                 self.iterate()
             # TODO Test whether we got a firmware name and version, otherwise there 
             # probably isn't any Firmata installed
-	    self.running = 1
-	except serial.SerialException:
-	    if os.path.exists(port) and not os.access(port, os.R_OK | os.W_OK):
-	    	print "No tiene permisos para acceder al dispositivo, verifique si su usuario pertenece al grupo dialout"
-	    else:
-	    	print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
-	    raise # re-raise the exception to allow the caller to handle this
+                self.running = 1
+        except serial.SerialException:
+            if os.path.exists(port) and not os.access(port, os.R_OK | os.W_OK):
+                print "No tiene permisos para acceder al dispositivo, verifique si su usuario pertenece al grupo dialout"
+            else:
+                print "No es posible conectarse al robot, por favor enchufe y configure el XBee"
+            raise # re-raise the exception to allow the caller to handle this
         
     def __str__(self):
         return "Board %s on %s" % (self.name, self.sp.port)
@@ -210,9 +211,10 @@ class Board(object):
         """ 
         Non-blocking time-out for ``t`` seconds.
         """
-        cont = time.time() + t
-        while time.time() < cont:
-            time.sleep(0)
+        gevent.sleep(t)
+        #cont = time.time() + t
+        #while time.time() < cont:
+        #    time.sleep(0)
             
     def send_sysex(self, sysex_cmd, data=[]):
         """
@@ -286,7 +288,7 @@ class Board(object):
         
     def exit(self):
         """ Call this to exit cleanly. """
-	self.running=0
+        self.running=0
         #if hasattr(self, 'sp'):
         #    self.sp.close()
         
@@ -324,25 +326,25 @@ class Board(object):
     def _handle_sysex_ping(self, *data):
         major = data[0]
         minor = data[1]      
-	robot = data[2]          
+        robot = data[2]          
         self.nearest_obstacle[robot]= minor + major*128 
 
 
     def _handle_sysex_analog(self, *data):
         major = data[0]
         minor = data[1]
-	robot = data[2]      
+        robot = data[2]      
         self.analog_value[robot]= minor + major*128 
 
     def _handle_sysex_digital(self, *data):
         major = data[0]
-	robot = data[1]
+        robot = data[1]
         self.digital_value[robot]= major 
 
 
     def _handle_sysex_broadcast(self, *data):
-	robot = data[0]
-	self.live_robots[robot]=1
+        robot = data[0]
+        self.live_robots[robot]=1
 
 class Port(object):
     """ An 8-bit port on the board """
