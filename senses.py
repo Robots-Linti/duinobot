@@ -79,7 +79,7 @@ def _sensesDialog(messages):
 
 def _sendSensorsValues(robot):
     messages = gevent.queue.Queue()
-    senses = gevent.Greenlet(target = _sensesDialog, args = (messages,))
+    senses = gevent.Greenlet(_sensesDialog, messages)
     senses.start()
     while senses.is_alive():
         values = {
@@ -93,7 +93,7 @@ def _sendSensorsValues(robot):
         #    "battery": int(time.time() % 100) 
         #}
         messages.put(values)
-        time.sleep(1)
+        gevent.sleep(1)
     senses.join()
 
 import platform
@@ -105,14 +105,29 @@ if mayor != '2' or minor < '6':
 else:
     import gevent
     import gevent.queue
-    import time
+    gevent.Greenlet.is_alive = lambda self: not self.dead
     def senses(robot):
-        update = gevent.Greenlet(target = _sendSensorsValues, args = (robot,))
-        update.start()    
+        update = gevent.Greenlet(_sendSensorsValues, robot)
+        update.start()
 
 if __name__ == "__main__":
-    from duinobot import *
-    b = Board("/dev/ttyUSB0")
-    r = Robot(b, 1)
+    #from duinobot import *
+    #b = Board("/dev/ttyUSB0")
+    #r = Robot(b, 1)
     #r = None
+    import random
+    class FakeRobot:
+        def getWheels(self):
+            return (random.random() * 1000, random.random() * 1000)
+        def getLine(self):    
+            return self.getWheels()
+        def ping(self):
+            return random.random() * 601
+        def battery(self):
+            return random.random() * 6
+    r = FakeRobot()
+    r2 = FakeRobot()
     senses(r)
+    senses(r2)
+    while True:
+        gevent.sleep(1)
