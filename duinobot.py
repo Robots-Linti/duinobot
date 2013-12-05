@@ -27,6 +27,10 @@ from pyfirmata import DuinoBot, util
 import time,re, os
 import gevent.lock
 
+import select, sys, time
+import gevent.monkey
+gevent.monkey.patch_all()
+
 class Board(object):
     lock = gevent.lock.Semaphore()
     def __init__(self, device='/dev/ttyUSB0'):

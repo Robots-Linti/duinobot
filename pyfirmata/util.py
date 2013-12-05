@@ -1,6 +1,5 @@
 import gevent
-import serial
-import time
+import serial 
 import os
 import pyfirmata
 from boards import BOARDS
@@ -33,13 +32,14 @@ class Iterator(gevent.Greenlet):
     def __init__(self, board):
         super(Iterator, self).__init__()
         self.board = board
-        
+    def __str__(self):
+        print("Iterator: " + self.board)    
     def _run(self):
         while 1:
             try:
                 while self.board.bytes_available() and self.board.running:
                     self.board.iterate()
-                time.sleep(0.001)
+                gevent.sleep(0)
                 if not self.board.running:    
                     return 
             except (AttributeError, serial.SerialException, OSError), e:

@@ -95,7 +95,7 @@ class Board(object):
                 self.iterate()
             # TODO Test whether we got a firmware name and version, otherwise there 
             # probably isn't any Firmata installed
-                self.running = 1
+            self.running = 1
         except serial.SerialException:
             if os.path.exists(port) and not os.access(port, os.R_OK | os.W_OK):
                 print "No tiene permisos para acceder al dispositivo, verifique si su usuario pertenece al grupo dialout"
@@ -211,10 +211,9 @@ class Board(object):
         """ 
         Non-blocking time-out for ``t`` seconds.
         """
-        gevent.sleep(t)
-        #cont = time.time() + t
-        #while time.time() < cont:
-        #    time.sleep(0)
+        cont = time.time() + t
+        while time.time() < cont:
+            gevent.sleep(0)
             
     def send_sysex(self, sysex_cmd, data=[]):
         """
