@@ -26,12 +26,23 @@
 from pyfirmata import DuinoBot, util
 import time,re, os
 import threading
+from datetime import datetime, timedelta
 
 class Board(object):
     instances = set()
     lock = threading.Lock()
+    def __ignore_motors_invocation(self):
+        '''Para evitar dañar las placas los cambios de velocidad,
+        principalmente si invierten el sentido de giro de los motores,
+        deben limitarse a 100ms por recomendación del fabricante.'''
+        if (datetime.now() - self.__last_motors_invocation < timedelta(0,0,100000)):
+            return True
+        self.__last_motors_invocation = datetime.now()
+        return False
+
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
+        self.__last_motors_invocation = datetime.now()
         self.board = DuinoBot(device)
         it = util.Iterator(self.board)
         it.start()
@@ -54,14 +65,20 @@ class Board(object):
         return res
 
     def motor0(self,vel,robotid):
+        if self.__ignore_motors_invocation():
+            return
         if(vel >= 0 and vel <= 100):
             self.board.send_sysex(1,[int(vel), robotid])    
 
     def motor1(self,vel,robotid):
+        if self.__ignore_motors_invocation():
+            return
         if(vel >= 0 and vel <= 100):
             self.board.send_sysex(2,[int(vel), robotid])   
             
     def motors(self,vel1, vel2, seconds=-1, robotid=0):
+        if self.__ignore_motors_invocation():
+            return
         if(abs(vel1)<=100 and abs(vel2)<=100):
             self.board.send_sysex(4,[int(abs(vel1)), int(abs(vel2)), 1 if vel1>0 else 0, 1 if vel2>0 else 0, robotid])   
             if seconds!=-1:
