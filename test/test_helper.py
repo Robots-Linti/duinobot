@@ -1,5 +1,7 @@
 #-*- encoding: utf-8 -*-
 import duinobot
+from datetime import datetime
+
 class ExpectationException(Exception):
     def __init__(self, msg):
         self.msg = msg
@@ -37,6 +39,9 @@ class MockLowLevelBoard(object):
     def expect_nothing(self):
         self.expectations = []
 
+    def expectations_satisfied(self):
+        return len(self.expectations) == 0
+
     def got(self, method, *args, **kwargs):
         if not self.expectations:
             raise NothingExpected(" ".join(("Expecting nothing but got", method)))
@@ -58,4 +63,5 @@ class MockLowLevelBoard(object):
 class MockBoard(duinobot.Board):
     def __init__(self, *args, **kwargs):
         self.board = MockLowLevelBoard(*args, **kwargs)
+        self.__last_motors_invocation = datetime.now()
 
