@@ -35,14 +35,14 @@ class Board(object):
         '''Para evitar dañar las placas los cambios de velocidad,
         principalmente si invierten el sentido de giro de los motores,
         deben limitarse a 100ms por recomendación del fabricante.'''
-        if (datetime.now() - self.__last_motors_invocation < timedelta(0,0,100000)):
+        if (datetime.now() - self._last_motors_invocation < timedelta(0,0,100000)):
             return True
-        self.__last_motors_invocation = datetime.now()
+        self._last_motors_invocation = datetime.now()
         return False
 
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
-        self.__last_motors_invocation = datetime.now()
+        self._last_motors_invocation = datetime.now()
         self.board = DuinoBot(device)
         it = util.Iterator(self.board)
         it.start()
