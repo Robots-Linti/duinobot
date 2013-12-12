@@ -1,3 +1,12 @@
+robot (0.12) unstable; urgency=low
+
+  * Posibilidad de salir del intérprete con Ctrl-C sin ejecutar Board.exit()
+  * Limite máximo de cambios de velocidad a 1 cada 100ms para prolongar la vida
+  útil de la placa.
+  * Clases mock y primeros tests con unittest para el código.
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Thu, 12 Dec 2013 12:11:02 -0300
+
 robot (0.11-2) unstable; urgency=low
 
   * setup.py: Path relativo para que instale con virtualenv.
