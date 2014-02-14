@@ -1,6 +1,6 @@
 #-*- encoding: utf-8 -*-
 import duinobot
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class ExpectationException(Exception):
     def __init__(self, msg):
@@ -63,4 +63,4 @@ class MockLowLevelBoard(object):
 class MockBoard(duinobot.Board):
     def __init__(self, *args, **kwargs):
         self.board = MockLowLevelBoard(*args, **kwargs)
-        self._last_motors_invocation = datetime.now()
+        self._last_motors_invocation = datetime.now() - timedelta(1, 0, 0)
