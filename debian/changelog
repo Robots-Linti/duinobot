@@ -1,4 +1,4 @@
-robot (0.13) UNRELEASED; urgency=low
+robot (0.13-1) unstable; urgency=low
 
   * Solucionado bug introducido al limitar los movimientos, este bug causaba
   que se descarten movimientos incluso aunque pasen más de 100ms entre cada
