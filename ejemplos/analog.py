@@ -1,17 +1,18 @@
-from pyfirmata import DuinoBot, util
-from N6 import N6
-
+from duinobot import *
 import sys
 
-placa=N6();
+b=Board()
+# id del robot
+idr=16
+r=Robot(b,idr)
 
 while 1:
     for i in range(6):
-        print placa.analog(i),
+        print b.analog(i, robotid=idr),
         print '\t',
     print '\n',
-    if placa.ping() < 50:
+    if r.ping() < 50:
         break
 
 
-placa.exit()
+b.exit()
