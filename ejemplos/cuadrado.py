@@ -1,4 +1,4 @@
-from robot import *
+from duinobot import *
 import time 
 b = Board("/dev/ttyUSB0")
 robot = Robot(b, 1)
