@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 # Solución del ejercicio 4 de la sección 3.2.3.
-from robot import *
+from duinobot import *
+
 b = Board("/dev/ttyUSB1")
+
 robot1 = Robot(b, 1)
 robot2 = Robot(b, 10)
 
