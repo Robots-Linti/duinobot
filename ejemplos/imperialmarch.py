@@ -1,7 +1,6 @@
 #!/bin/python
 
-from pyfirmata import DuinoBot, util
-from robot import Board, Robot
+from duinotbot import *
 from time import *
 
 
