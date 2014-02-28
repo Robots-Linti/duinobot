@@ -1,7 +1,7 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 
-from robot import Board, Robot
+from duinobot import *
 from time import *
 
 
