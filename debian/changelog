@@ -1,3 +1,9 @@
+robot (0.13-2) UNRELEASED; urgency=low
+
+  * Se corrigió ejemplo de duinobot 
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Wed, 05 Mar 2014 11:43:03 -0300
+
 robot (0.13-1) unstable; urgency=low
 
   * Solucionado bug introducido al limitar los movimientos, este bug causaba
