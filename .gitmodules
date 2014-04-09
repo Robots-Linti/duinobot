@@ -1,0 +1,3 @@
+[submodule "pyfirmata-github"]
+	path = pyfirmata-github
+	url = git@github.com:Robots-Linti/pyFirmata.git
