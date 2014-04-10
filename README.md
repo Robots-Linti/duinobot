@@ -4,8 +4,8 @@
 --------
 
 Duinobot es un paquete Python para controlar robots simples, está pensado para
-ser usado por alumnos de escuelas secundarias en sus primeros cursos de
-programación.
+ser usado por alumnos de escuelas secundarias como parte de un curso en donde
+aprender los conceptos básicos de programación.
 
 ¿Cómo se ve un programa que usa Duinobot?
 -----------------------------------------
@@ -15,7 +15,7 @@ Duinobot para interactuar con los robots.
 
 Por ejemplo podemos programar un robot para que avance hasta encontrar un
 obstáculo
-y que al encontrar el obstáculo gire y luego siga avanzando:
+y que al encontrarlo gire y luego siga avanzando:
 
 ```python
 from duinobot import *
@@ -49,15 +49,16 @@ protocolo [Firmata](http://firmata.org).
 ¿Puedo probarlo sin robots?
 ---------------------------
 
-Estamos trabajando en un simulador basado en Pilas Engine, la primer beta ya es
-utilizable, se puede descargar [empaquetada para
+Estamos trabajando en un simulador basado en Pilas Engine. La primer beta ya es
+utilizable y se puede descargar [empaquetada para
 Debian](http://sl.linti.unlp.edu.ar/2014/03/esta-disponible-la-primer-version-del-simulador-del-multiplo-n6/) o [con git desde el
 repositorio del proyecto en GitHub](https://github.com/apehua/pilas).
 
 ¿En qué sistemas operativos funciona?
 -------------------------------------
 
-Lo probamos y empaquetamos principalmente en la distribución Lihuen GNU/Linux
+Lo probamos y empaquetamos principalmente en la distribución [Lihuen
+GNU/Linux](http://lihuen.linti.unlp.edu.ar)
 que es completamente compatible con Debian estable.
 
 En teoría debería funcionar en cualquier sistema GNU/Linux sin problemas y en
@@ -71,7 +72,7 @@ mencionadas).
 ¿Cómo lo instalo?
 -----------------
 
-En el [manual de uso de Duinobot](http://robots.linti.unlp.edu.ar/material_disponible) que está en el sitio oficial del proyecto hay una guía de
+En el [manual de uso de Duinobot](http://robots.linti.unlp.edu.ar/material_disponible) que está en el [sitio oficial del proyecto](http://robots.linti.unlp.edu.ar) hay una guía de
 instalación para el paquete en distribuciones basadas en Debian.
 
 De forma alternativa se puede clonar la última versión de Duinobot con git:
@@ -85,10 +86,11 @@ Manual de uso y material didáctico
 ----------------------------------
 
 El [manual de uso de Duinobot](http://robots.linti.unlp.edu.ar/material_d
-isponible) fue redactado para ser leído directamente por los alumnos sin
-necesidad de que tengan conocimientos previos en comunicación, por lo tanto en
-el mismo se introducen conceptos básicos como variables, funciones, módulos,
-y estructuras de control de forma simple y con ejemplos.
+isponible) fue redactado para ser leído directamente por los alumnos
+destinatarios del proyecto pertenecientes a escuelas secundarias. Los mismos,
+por lo general, no tienen conocimientos previos en programación. Por lo tanto,
+en el manual, se introducen conceptos básicos como variables, funciones,
+módulos, y estructuras de control de forma simple y con ejemplos.
 
 También hay entre los materiales 4 clases teóricas y sus guías prácticas
 correspondientes con licencias Creative Commons.
