@@ -28,6 +28,8 @@ import time,re, os
 import threading
 from datetime import datetime, timedelta
 
+A1, A2, A3, A4, A5 = range(14, 19)
+
 class Board(object):
     instances = set()
     lock = threading.Lock()
@@ -157,6 +159,7 @@ class Robot:
         self.robotid = robotid
         self.board = board
         self.name = ''
+        self.pins = dict()
         
     def __del__(self):
         self.board.exit()
@@ -253,6 +256,15 @@ class Robot:
     def speak(self, msj):
         '''Imprime en la terminal el mensaje msj.'''
         print msj
+
+    def posicionarServo(self, pin, angulo):
+        '''Pasa un ángulo entre 0 y 180 grados al servo conectado
+        al pin indicado'''
+        if pin not in self.pins.keys():
+            self.pins[pin] = self.board.board.get_pin('d:{0}:s'.format(pin))
+        port = self.pins[pin]
+        port.write(angulo)
+
 
 from senses import *
 Robot.senses = senses
