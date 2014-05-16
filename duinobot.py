@@ -257,13 +257,13 @@ class Robot:
         '''Imprime en la terminal el mensaje msj.'''
         print msj
 
-    def posicionarServo(self, pin, angulo):
+    def moveServo(self, pin, angle):
         '''Pasa un ángulo entre 0 y 180 grados al servo conectado
         al pin indicado'''
         if pin not in self.pins.keys():
             self.pins[pin] = self.board.board.get_pin('d:{0}:s'.format(pin))
         port = self.pins[pin]
-        port.write(angulo)
+        port.write(angle)
 
 
 from senses import *
