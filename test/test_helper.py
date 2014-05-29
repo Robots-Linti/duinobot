@@ -2,15 +2,23 @@
 import duinobot
 from datetime import datetime, timedelta
 
+
 class ExpectationException(Exception):
     def __init__(self, msg):
         self.msg = msg
+
     def __str__(self):
         return self.msg
+
+
 class NothingExpected(ExpectationException):
     pass
+
+
 class OtherMessageExpected(ExpectationException):
     pass
+
+
 class OtherParamsExpected(ExpectationException):
     def _format(self, method, *args, **kwargs):
         msg = ["<{0}(".format(method)]
@@ -24,9 +32,14 @@ class OtherParamsExpected(ExpectationException):
         return "".join(msg)
 
     def __init__(self, expected, method, *args, **kwargs):
-        self.msg = self._format(expected["message"] , *expected["*args"], **expected["**kwargs"])
+        self.msg = self._format(
+            expected["message"],
+            *expected["*args"],
+            **expected["**kwargs"]
+        )
         self.msg += " expected but got "
         self.msg += self._format(method, *args, **kwargs)
+
 
 class MockLowLevelBoard(object):
     def __init__(self, device):
@@ -34,7 +47,11 @@ class MockLowLevelBoard(object):
         self.expectations = []
 
     def expect(self, message, *args, **kwargs):
-        self.expectations.append({ "message": message, "*args": args, "**kwargs": kwargs })
+        self.expectations.append({
+            "message": message,
+            "*args": args,
+            "**kwargs": kwargs
+        })
 
     def expect_nothing(self):
         self.expectations = []
@@ -44,10 +61,18 @@ class MockLowLevelBoard(object):
 
     def got(self, method, *args, **kwargs):
         if not self.expectations:
-            raise NothingExpected(" ".join(("Expecting nothing but got", method)))
+            raise NothingExpected(" ".join((
+                "Expecting nothing but got",
+                method
+            )))
         expected = self.expectations.pop(0)
         if expected["message"] != method:
-            raise OtherMessageExpected(" ".join(("Expecting", expected["message"], "but got", method)))
+            raise OtherMessageExpected(" ".join((
+                "Expecting",
+                expected["message"],
+                "but got",
+                method
+            )))
         if expected["*args"] != args or expected["**kwargs"] != kwargs:
             raise OtherParamsExpected(expected, method, *args, **kwargs)
 
@@ -60,7 +85,9 @@ class MockLowLevelBoard(object):
     def exit(self):
         pass
 
+
 class MockBoard(duinobot.Board):
+
     def __init__(self, *args, **kwargs):
         self.board = MockLowLevelBoard(*args, **kwargs)
         self._last_motors_invocation = datetime.now() - timedelta(1, 0, 0)

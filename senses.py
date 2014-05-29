@@ -11,9 +11,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the RMPL license along with this program. 
+# You should have received a copy of the RMPL license along with this program.
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
+
 
 class SensesModel():
     def __init__(self):
@@ -22,38 +23,40 @@ class SensesModel():
         self.ping = tk.StringVar()
         self.battery = tk.StringVar()
 
+
 class SensesGUI():
     def __init__(self, root, model):
         self.root = root
         root.title("Senses")
         self.frame = tk.Frame(root)
-        self.frame.pack(expand = 1, padx = 5, pady = 5)
+        self.frame.pack(expand=1, padx=5, pady=5)
         #self.frame["padding"] = 5
         label = tk.Label(self.frame)
         label["text"] = "Ping:"
-        label.grid(row = 0, sticky = tk.W)
+        label.grid(row=0, sticky=tk.W)
         self.ping = tk.Entry(self.frame)
-        self.ping.grid(row = 0, column = 1)
+        self.ping.grid(row=0, column=1)
         label = tk.Label(self.frame)
         label["text"] = "Sensores de las ruedas:"
-        label.grid(row = 1, columnspan = 2)
+        label.grid(row=1, columnspan=2)
         self.wheelLeft = tk.Entry(self.frame)
-        self.wheelLeft.grid(row = 2, column = 0)
+        self.wheelLeft.grid(row=2, column=0)
         self.wheelRight = tk.Entry(self.frame)
-        self.wheelRight.grid(row = 2, column = 1)
+        self.wheelRight.grid(row=2, column=1)
         label = tk.Label(self.frame)
         label["text"] = "Medidor de batería: "
-        label.grid(row = 3, sticky = tk.W)
+        label.grid(row=3, sticky=tk.W)
         self.battery = tk.Entry(self.frame)
-        self.battery.grid(row = 3, column = 1)
+        self.battery.grid(row=3, column=1)
         self.model = model
         self._setEntries()
-        
+
     def _setEntries(self):
         self.wheelLeft["textvariable"] = self.model.wheelLeft
         self.wheelRight["textvariable"] = self.model.wheelRight
         self.ping["textvariable"] = self.model.ping
         self.battery["textvariable"] = self.model.battery
+
 
 def _updateModel(model, messages, root):
     values = messages.get()
@@ -66,9 +69,10 @@ def _updateModel(model, messages, root):
     model.battery.set(str(values["battery"]))
     root.after(1000, _updateModel, model, messages, root)
 
+
 def _sensesDialog(messages):
     global tk
-    import Tkinter # Tkinter must be imported in the process that uses it
+    import Tkinter  # Tkinter must be imported in the process that uses it
     tk = Tkinter
     root = tk.Tk()
     model = SensesModel()
@@ -77,10 +81,12 @@ def _sensesDialog(messages):
     root.mainloop()
     root.quit()
 
+
 def _sendSensorsValues(robot):
     messages = multiprocessing.Queue()
-    senses = multiprocessing.Process(target = _sensesDialog, args = (messages,))
-    senses.start()
+    senses = multiprocessing.Process(target=_sensesDialog,
+                                     args=(messages))
+    senses.start
     while senses.is_alive():
         values = {
             "wheels": robot.getWheels(),
@@ -90,7 +96,7 @@ def _sendSensorsValues(robot):
         #values = {
         #    "line": (1,1),
         #    "ping": int(time.time() % 100),
-        #    "battery": int(time.time() % 100) 
+        #    "battery": int(time.time() % 100)
         #}
         messages.put(values)
         time.sleep(1)
@@ -99,20 +105,22 @@ def _sendSensorsValues(robot):
 import platform
 mayor, minor, revision = platform.python_version_tuple()
 if mayor != '2' or minor < '6':
-    print("El módulo senses precisa una versión de Python mayor o igual a 2.6 y menor a 3")
+    print("El módulo senses precisa una versión de Python mayor" +
+          "o igual a 2.6 y menor a 3")
+
     def senses(robot):
         print("Función no disponible en esta versión de Python")
 else:
     import threading
     import multiprocessing
     import time
+
     def senses(robot):
-        update = threading.Thread(target = _sendSensorsValues, args = (robot,))
-        update.start()    
+        update = threading.Thread(target=_sendSensorsValues, args=(robot,))
+        update.start()
 
 if __name__ == "__main__":
     from duinobot import *
     b = Board("/dev/ttyUSB0")
     r = Robot(b, 1)
-    #r = None
     senses(r)

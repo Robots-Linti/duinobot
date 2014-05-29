@@ -12,16 +12,16 @@ setup(name='duinobot',
       url='http://lihuen.linti.unlp.edu.ar',
       packages=['duinobot', 'duinobot.pyfirmata'],
       package_dir={'duinobot': '.'},
-      data_files=[('usr/share/doc/duinobot/ejemplos', glob.glob(os.path.join('ejemplos','*.py')))],
+      data_files=[('usr/share/doc/duinobot/ejemplos',
+          glob.glob(os.path.join('ejemplos', '*.py')))],
       requires=['pyserial', 'pygame'],
-      classifiers = [
-        "Environment :: Console",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Education",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Topic :: Education",
-        "Programming Language :: Python :: 2.6",
-        "Programming Language :: Python :: 2.7"
-       ]
-     )
+      classifiers=[
+          "Environment :: Console",
+          "Intended Audience :: Developers",
+          "Intended Audience :: Education",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python",
+          "Topic :: Education",
+          "Programming Language :: Python :: 2.6",
+          "Programming Language :: Python :: 2.7"
+      ])
