@@ -1,6 +1,12 @@
-robot (0.13-2) UNRELEASED; urgency=low
+robot (0.13-3) unstable; urgency=low
 
-  * Se corrigió ejemplo de duinobot 
+  * PEP-8 (excepto los nombres de métodos).
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Fri, 30 May 2014 14:40:03 -0300
+
+robot (0.13-2) unstable; urgency=low
+
+  * Se corrigió ejemplo de duinobot
 
  -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Wed, 05 Mar 2014 11:43:03 -0300
 
