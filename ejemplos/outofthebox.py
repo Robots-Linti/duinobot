@@ -6,7 +6,7 @@ from time import *
 
 
 b = Board('/dev/ttyUSB0')
-r = Robot(b,1)
+r = Robot(b, 1)
 
 ctime = time()
 while time() - ctime < 30:

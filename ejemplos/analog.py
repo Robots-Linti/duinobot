@@ -1,10 +1,10 @@
 from duinobot import *
 import sys
 
-b=Board()
+b = Board()
 # id del robot
-idr=16
-r=Robot(b,idr)
+idr = 1
+r = Robot(b, idr)
 
 while 1:
     for i in range(6):
