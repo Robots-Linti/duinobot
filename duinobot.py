@@ -34,7 +34,6 @@ A1, A2, A3, A4, A5 = range(14, 19)
 
 
 class Board(object):
-    instances = set()
     lock = threading.Lock()
 
     def __ignore_motors_invocation(self):
@@ -52,9 +51,12 @@ class Board(object):
         self._last_motors_invocation = datetime.now() - timedelta(1, 0, 0)
         self.board = DuinoBot(device)
         it = util.Iterator(self.board)
+        # FIXME: En Python > 2.5 se puede cambiar por it.daemon = True
+        # http://stackoverflow.com/questions/17650754
+        # /how-can-i-capture-ctrl-d-in-python-interactive-console
+        it.setDaemon(True)
         it.start()
         self.board.pass_time(0.1)
-        Board.instances.add(self)
 
     def __del__(self):
         self.exit()
@@ -105,7 +107,6 @@ class Board(object):
         self.board.pass_time(time)
 
     def exit(self):
-        Board.instances.discard(self)
         self.board.exit()
 
     def analog(self, ch, samples=1, robotid=0):
@@ -301,16 +302,3 @@ __devPattern = re.compile(r"^ttyUSB\d+$")
 def boards():
     matching = filter(__devPattern.match, os.listdir("/dev"))
     return map(lambda s: "/dev/" + s, matching)
-
-import signal
-
-
-def __end_threads(signum=None, frame=None):
-    print("Signal " + str(signum))
-    while Board.instances:
-        board = Board.instances.pop()
-        board.exit()
-    while threading.active_count() > 1:
-        time.sleep(0)
-    exit(0)
-signal.signal(signal.SIGINT, __end_threads)
