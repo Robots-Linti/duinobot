@@ -30,7 +30,7 @@ import os
 import threading
 from datetime import datetime, timedelta
 
-A1, A2, A3, A4, A5 = range(14, 19)
+A0, A1, A2, A3, A4, A5 = range(14, 20)
 
 
 class Board(object):
