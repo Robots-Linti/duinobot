@@ -172,9 +172,6 @@ class Robot:
         self.name = ''
         self.pins = dict()
 
-    def __del__(self):
-        self.board.exit()
-
     ##MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
         '''El robot avanza con velocidad vel durante seconds segundos.'''
