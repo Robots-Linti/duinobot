@@ -34,6 +34,7 @@ import itertools
 A0, A1, A2, A3, A4, A5 = range(14, 20)
 MOVE_SERVO = 0x0A
 
+
 class Board(object):
     lock = threading.Lock()
 
@@ -274,19 +275,19 @@ class Robot:
     def speak(self, msj):
         '''Imprime en la terminal el mensaje msj.'''
         print msj
-        
+
     def configServo(self, pin, min_pulse=544, max_pulse=2400):
         data = itertools.chain([pin],
                                util.to_two_bytes(min_pulse),
                                util.to_two_bytes(max_pulse),
                                [self.robotid])
         self.board.board.send_sysex(SERVO_CONFIG, data)
-        
+
     def moveServo(self, pin, angle):
         '''Pasa un ángulo entre 0 y 180 grados al servo conectado
         al pin indicado'''
-        data =itertools.chain([pin],reversed(util.to_two_bytes(angle)),
-                              [self.robotid])
+        data = itertools.chain([pin], reversed(util.to_two_bytes(angle)),
+                               [self.robotid])
         self.board.board.send_sysex(MOVE_SERVO, data)
 
 from senses import *
