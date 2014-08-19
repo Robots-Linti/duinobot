@@ -38,19 +38,20 @@ MOVE_SERVO = 0x0A
 class Board(object):
     lock = threading.Lock()
 
-    def __ignore_motors_invocation(self):
+    def __ignore_motors_invocation(self, robot_id):
         '''Para evitar dañar las placas los cambios de velocidad,
         principalmente si invierten el sentido de giro de los motores,
         deben limitarse a 100ms por recomendación del fabricante.'''
-        if (datetime.now() - self._last_motors_invocation
-                <= timedelta(0, 0, 100000)):
+        now = datetime.now()
+        last = self._last_motors_invocation.get(robot_id,
+                                                now - timedelta(1, 0, 0))
+        if now - last <= timedelta(0, 0, 100000):
             return True
-        self._last_motors_invocation = datetime.now()
+        self._last_motors_invocation[robot_id] = datetime.now()
         return False
 
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
-        self._last_motors_invocation = datetime.now() - timedelta(1, 0, 0)
         self.board = DuinoBot(device)
         it = util.Iterator(self.board)
         # FIXME: En Python > 2.5 se puede cambiar por it.daemon = True
@@ -59,6 +60,7 @@ class Board(object):
         it.setDaemon(True)
         it.start()
         self.board.pass_time(0.1)
+        self._last_motors_invocation = dict()
 
     def __del__(self):
         self.exit()
@@ -76,19 +78,20 @@ class Board(object):
         return res
 
     def motor0(self, vel, robotid):
-        if vel != 0 and self.__ignore_motors_invocation():
+        if vel != 0 and self.__ignore_motors_invocation(robotid):
             return
         if(vel >= 0 and vel <= 100):
             self.board.send_sysex(1, [int(vel), robotid])
 
     def motor1(self, vel, robotid):
-        if vel != 0 and self.__ignore_motors_invocation():
+        if vel != 0 and self.__ignore_motors_invocation(robotid):
             return
         if(vel >= 0 and vel <= 100):
             self.board.send_sysex(2, [int(vel), robotid])
 
     def motors(self, vel1, vel2, seconds=-1, robotid=0):
-        if vel1 != 0 and vel2 != 0 and self.__ignore_motors_invocation():
+        if vel1 != 0 and vel2 != 0 and\
+                self.__ignore_motors_invocation(robotid):
             return
         if(abs(vel1) <= 100 and abs(vel2) <= 100):
             self.board.send_sysex(
