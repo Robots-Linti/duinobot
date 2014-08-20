@@ -24,12 +24,10 @@ class OtherParamsExpected(ExpectationException):
         msg = ["<{0}(".format(method)]
         msg.extend(args)
         for name in kwargs:
-            msg.append(name + " = " + kwargs[name] + ",")
+            msg.append(name + " = " + kwargs[name])
         msg.append(")>")
-        msg = map(lambda x: str(x), msg)
-        print(msg)
-        print("".join(msg))
-        return "".join(msg)
+        msg = map(str, msg)
+        return ", ".join(msg)
 
     def __init__(self, expected, method, *args, **kwargs):
         self.msg = self._format(
@@ -76,8 +74,13 @@ class MockLowLevelBoard(object):
         if expected["*args"] != args or expected["**kwargs"] != kwargs:
             raise OtherParamsExpected(expected, method, *args, **kwargs)
 
-    def send_sysex(self, *args):
-        self.got("send_sysex", *args)
+    def send_sysex(self, command, args):
+        def _ord(byte):
+            try:
+                return ord(byte)
+            except TypeError:
+                return byte
+        self.got("send_sysex", command, map(_ord, args))
 
     def pass_time(self, time):
         self.got("pass_time", time)
