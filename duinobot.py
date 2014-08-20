@@ -138,7 +138,7 @@ class Board(object):
             else:
                 self.board.send_sysex(
                     5, [hi, lo, int(microseconds*1000), robotid])
-                #self.board.pass_time(microseconds)
+                # self.board.pass_time(microseconds)
         else:
             self.board.send_sysex(5, [robotid])
 
@@ -177,7 +177,7 @@ class Robot:
         self.name = ''
         self.pins = dict()
 
-    ##MOVIMIENTO
+    # MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
         '''El robot avanza con velocidad vel durante seconds segundos.'''
         self.board.motors(vel, vel, seconds, self.robotid)
@@ -209,7 +209,7 @@ class Robot:
         '''Detiene todo movimiento del robot inmediatamente.'''
         self.board.motors(0, 0, robotid=self.robotid)
 
-    ##SENSORES
+    # SENSORES
     def getLine(self):
         '''Devuelve los valores de los sensores de linea.'''
         return self.board.getLine(self.robotid)
@@ -256,7 +256,7 @@ class Robot:
         print 'Obstaculo mas cercano = ' + str(self.ping()) + ' cm.'
         print 'Bateria = ' + str(self.battery()) + ' v.'
 
-    ##Identificadores
+    # Identificadores
     def setId(self, newid):
         '''Setea el robotid'''
         self.board.set_id(newid, self.robotid)
@@ -274,7 +274,7 @@ class Robot:
         '''Devuelve el nombre del robot.'''
         return self.name
 
-    ## Otras funciones
+    # Otras funciones
     def speak(self, msj):
         '''Imprime en la terminal el mensaje msj.'''
         print msj

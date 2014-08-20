@@ -13,7 +13,7 @@ setup(name='duinobot',
       packages=['duinobot', 'duinobot.pyfirmata'],
       package_dir={'duinobot': '.'},
       data_files=[('usr/share/doc/duinobot/ejemplos',
-          glob.glob(os.path.join('ejemplos', '*.py')))],
+                   glob.glob(os.path.join('ejemplos', '*.py')))],
       requires=['pyserial', 'pygame'],
       classifiers=[
           "Environment :: Console",

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#-*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ###############################################################################
 # Copyright (C) 2012 Fernando López <flopez AT linti.unlp.edu.ar>
 #
@@ -30,7 +30,7 @@ class SensesGUI():
         root.title("Senses")
         self.frame = tk.Frame(root)
         self.frame.pack(expand=1, padx=5, pady=5)
-        #self.frame["padding"] = 5
+        # self.frame["padding"] = 5
         label = tk.Label(self.frame)
         label["text"] = "Ping:"
         label.grid(row=0, sticky=tk.W)
@@ -93,11 +93,11 @@ def _sendSensorsValues(robot):
             "ping": robot.ping(),
             "battery": robot.battery()
         }
-        #values = {
-        #    "line": (1,1),
-        #    "ping": int(time.time() % 100),
-        #    "battery": int(time.time() % 100)
-        #}
+        # values = {
+        #     "line": (1,1),
+        #     "ping": int(time.time() % 100),
+        #     "battery": int(time.time() % 100)
+        # }
         messages.put(values)
         time.sleep(1)
     senses.join()
