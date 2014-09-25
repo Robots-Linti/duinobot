@@ -174,7 +174,7 @@ class Board(object):
     wait = sleep
 
 
-class Robot:
+class Robot(object):
     def __init__(self, board, robotid=0):
         '''Inicializa el robot y lo asocia con la placa board.'''
         self.robotid = robotid
