@@ -105,14 +105,13 @@ class Board(object):
     def ping(self, robotid):
         self.board.nearest_obstacle[robotid] = None
         self.board.send_sysex(3, [robotid])
-        ### wait 20ms (ping delay) + 20ms (comm)
-        ##self.board.pass_time(0.04)
-        self.board.pass_time(0.04)
-        # Parece haber paquetes perdidos...
-        while self.board.nearest_obstacle[robotid] is None:
-            self.board.send_sysex(3, [robotid])
+        # A veces hay que esperar más de 0.04 segundos
+        for i in xrange(3):
+            # wait 20ms (ping delay) + 20ms (comm)
             self.board.pass_time(0.04)
-        return self.board.nearest_obstacle[robotid]
+            if self.board.nearest_obstacle[robotid] is not None:
+                return self.board.nearest_obstacle[robotid]
+        return -1
 
     def sleep(self, time):
         self.board.pass_time(time)
