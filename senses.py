@@ -85,8 +85,9 @@ def _sensesDialog(messages):
 def _sendSensorsValues(robot):
     messages = multiprocessing.Queue()
     senses = multiprocessing.Process(target=_sensesDialog,
-                                     args=(messages))
-    senses.start
+                                     args=(messages,))
+    senses.daemon = True
+    senses.start()
     while senses.is_alive():
         values = {
             "wheels": robot.getWheels(),
@@ -117,6 +118,7 @@ else:
 
     def senses(robot):
         update = threading.Thread(target=_sendSensorsValues, args=(robot,))
+        update.setDaemon(True)
         update.start()
 
 if __name__ == "__main__":
