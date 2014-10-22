@@ -44,18 +44,16 @@ class Board(object):
         principalmente si invierten el sentido de giro de los motores,
         deben limitarse a 100ms por recomendación del fabricante.'''
         now = datetime.now()
-        old_time, old_left, old_right = self.__last_move.get(
-            robot_id, (now - timedelta(0, 1, 0), 0 , 0)
+        old_time = self._last_move.get(
+            robot_id, now - timedelta(0, 1, 0)
         )
-        if left is None:
-            left = old_left
-        if right is None:
-            right = old_right
 
-        if now - old_time <= self.MOTOR_DELAY_TB6612\
-                and (abs(left) > 0 or abs(right) > 0):
+        if left == 0 and right == 0:
+            # Siempre dejar pasar los stop() sin registrarlos
+            return False
+        if now - old_time <= self.MOTOR_DELAY_TB6612:
             return True
-        self.__last_move[robot_id] = (now, left, right)
+        self._last_move[robot_id] = now
         return False
 
     def __init__(self, device='/dev/ttyUSB0'):
@@ -68,7 +66,7 @@ class Board(object):
         it.setDaemon(True)
         it.start()
         self.board.pass_time(0.1)
-        self.__last_move = dict()
+        self._last_move = dict()
 
     def __del__(self):
         self.exit()
@@ -110,7 +108,7 @@ class Board(object):
         self.board.nearest_obstacle[robotid] = None
         self.board.send_sysex(3, [robotid])
         # A veces hay que esperar más de 0.04 segundos
-        for i in xrange(3):
+        for i in xrange(6):
             # wait 20ms (ping delay) + 20ms (comm)
             self.board.pass_time(0.04)
             if self.board.nearest_obstacle[robotid] is not None:
