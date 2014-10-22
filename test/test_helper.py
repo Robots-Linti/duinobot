@@ -93,4 +93,4 @@ class MockBoard(duinobot.Board):
 
     def __init__(self, *args, **kwargs):
         self.board = MockLowLevelBoard(*args, **kwargs)
-        self._last_motors_invocation = dict()
+        self._last_move = dict()
