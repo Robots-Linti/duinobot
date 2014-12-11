@@ -1,3 +1,13 @@
+robot (0.13+4) unstable; urgency=medium
+
+  * Soporte para servomotores.
+  * Corrección de Robot.senses que no funcionaba.
+  * Reintentos para obtener información del sensor ping.
+  * Limita movimientos por robot en lugar de por placa.
+  * Constantes para acceder a los puertos analógicos (A0, A1, ...)
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Mon, 10 Nov 2014 13:44:13 -0300
+
 robot (0.13-3) unstable; urgency=low
 
   * PEP-8 (excepto los nombres de métodos).
