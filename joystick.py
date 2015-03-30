@@ -18,9 +18,12 @@
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
 
-import pygame
-# Inicializar solamente el Joystick es más rápido pero suele fallar
-pygame.init()
+try:
+    import pygame
+    # Inicializar solamente el Joystick es más rápido pero suele fallar
+    pygame.init()
+except ImportError:
+    print('Para usar joysticks tenés que instalar pygame')
 
 
 def joysticks():
