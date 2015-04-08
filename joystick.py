@@ -39,7 +39,10 @@ def joysticks():
 
 class Joystick:
     "Permite controlar un robot con un joystick"
-    joystickDetected = pygame.joystick.get_count() > 0
+    if 'pygame' in globals():
+        joystickDetected = pygame.joystick.get_count() > 0
+    else:
+        joystickDetected = False
 
     @classmethod
     def __refresh(cls):
