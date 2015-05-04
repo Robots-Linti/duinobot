@@ -18,9 +18,12 @@
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
 
-import pygame
-# Inicializar solamente el Joystick es más rápido pero suele fallar
-pygame.init()
+try:
+    import pygame
+    # Inicializar solamente el Joystick es más rápido pero suele fallar
+    pygame.init()
+except ImportError:
+    print('Para usar joysticks tenés que instalar pygame')
 
 
 def joysticks():
@@ -36,7 +39,10 @@ def joysticks():
 
 class Joystick:
     "Permite controlar un robot con un joystick"
-    joystickDetected = pygame.joystick.get_count() > 0
+    if 'pygame' in globals():
+        joystickDetected = pygame.joystick.get_count() > 0
+    else:
+        joystickDetected = False
 
     @classmethod
     def __refresh(cls):
