@@ -30,6 +30,7 @@ import os
 import threading
 from datetime import datetime, timedelta
 import itertools
+import sockets
 
 A0, A1, A2, A3, A4, A5 = range(14, 20)
 MOVE_SERVO = 0x0A
@@ -187,6 +188,18 @@ class Robot(object):
         self.board = board
         self.name = ''
         self.pins = dict()
+
+        def send_data(self, data, robotid):
+            robot_ip = '192.168.4.1'
+            puerto = 1234
+            # data = "\xF0\x01\x46\x0F\xF7"
+
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((hostname, port))
+            s.sendall(data)
+            s.shutdown(socket.SHUT_WR)
+            print "Connection closed."
+            s.close()
 
     # MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
