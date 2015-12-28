@@ -84,6 +84,16 @@ class Board(object):
         Board.lock.release()
         return res
 
+    def send_wifi(self, data):
+        roip = '192.168.4.1'
+        port = 1234
+        # data = "\xF0\x01\x46\x0F\xF7"
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((roip, port))
+        s.sendall(data)
+        s.shutdown(socket.SHUT_WR)
+        s.close()
+
     def motor0(self, vel, robotid):
         if vel >= 0 and vel <= 100\
                 and not self.__ignore_motors(robotid, vel):
@@ -185,17 +195,9 @@ class Robot(object):
         self.name = ''
         self.pins = dict()
 
-    def send_data(self, data, robotid):
-        roip = '192.168.4.1'
-        port = 1234
-        # data = "\xF0\x01\x46\x0F\xF7"
-
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((roip, port))
-        s.sendall(data)
-        s.shutdown(socket.SHUT_WR)
-        print "Connection closed."
-        s.close()
+    def send_wifi(self, data):
+        '''Se envian los datos al metodo send_wifi en clase Board'''
+        self.board.send_wifi(self.robotid)
 
     # MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
