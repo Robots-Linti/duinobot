@@ -85,20 +85,21 @@ class Board(object):
         Board.lock.release()
         return res
 
-    def send_wifi(self, data):
-        roip = '192.168.4.1'
-        port = 1234
+"""    def send_wifi(self, data):
         # data = "\xF0\x01\x46\x0F\xF7"
+        robot_ip = '192.168.4.1'
+        port = 1234
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((roip, port))
+        s.connect((robot_ip, port))
         s.sendall(data)
         s.shutdown(socket.SHUT_WR)
-        s.close()
+        s.close() """ 
 
     def motor0(self, vel, robotid):
         if vel >= 0 and vel <= 100\
                 and not self.__ignore_motors(robotid, vel):
             self.board.send_sysex(1, [int(vel), robotid])
+            self.board.send_sysex(0x71, [int(vel), robotid])
 
     def motor1(self, vel, robotid):
         if vel >= 0 and vel <= 100\
