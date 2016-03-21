@@ -23,7 +23,7 @@
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
 
-from pyfirmata import DuinoBot, util, SERVO_CONFIG
+from pyfirmata import DuinoBot, util, SERVO_CONFIG, SET_PIN_MODE
 import time
 import re
 import os
@@ -135,6 +135,9 @@ class Board(object):
         self.board.send_sysex(7, [pin, robotid])
         self.board.pass_time(0.04)
         return self.board.digital_value[robotid]
+
+    def set_pin_mode(self, pin, mode, robotid):
+        self.board.send_sysex(SET_PIN_MODE, [mode, robotid])
 
     def beep(self, freq=0, microseconds=0, robotid=0):
         hi = freq >> 7
