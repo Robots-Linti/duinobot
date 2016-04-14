@@ -33,6 +33,7 @@ import itertools
 
 A0, A1, A2, A3, A4, A5 = range(14, 20)
 MOVE_SERVO = 0x0A
+EXTENDED_PIN_MODE = 0x0B
 
 
 class Board(object):
@@ -135,6 +136,9 @@ class Board(object):
         self.board.send_sysex(7, [pin, robotid])
         self.board.pass_time(0.04)
         return self.board.digital_value[robotid]
+
+    def set_pin_mode(self, pin, mode, robotid):
+        self.board.send_sysex(EXTENDED_PIN_MODE, [pin, mode, robotid])
 
     def beep(self, freq=0, microseconds=0, robotid=0):
         hi = freq >> 7
