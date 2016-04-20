@@ -23,14 +23,13 @@
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
 
-from pyfirmata import DuinoBot, util, SERVO_CONFIG
+from pyfirmata import DuinoBot, TCPDuinoBot, util, SERVO_CONFIG
 import time
 import re
 import os
 import threading
 from datetime import datetime, timedelta
 import itertools
-import socket
 
 A0, A1, A2, A3, A4, A5 = range(14, 20)
 MOVE_SERVO = 0x0A
@@ -61,6 +60,9 @@ class Board(object):
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
         self.board = DuinoBot(device)
+        self.__generic_initialization()
+
+    def __generic_initialization(self):
         it = util.Iterator(self.board)
         # FIXME: En Python > 2.5 se puede cambiar por it.daemon = True
         # http://stackoverflow.com/questions/17650754
@@ -180,6 +182,12 @@ class Board(object):
         return (a, b)
 
     wait = sleep
+
+
+class TCPBoard(object):
+    def __init__(self, robot_ip='192.168.4.1', port=1234):
+        self.board = TCPDuinoBot(robot_ip, port)
+        self.__generic_initialization()
 
 
 class Robot(object):
