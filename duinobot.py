@@ -60,9 +60,9 @@ class Board(object):
     def __init__(self, device='/dev/ttyUSB0'):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
         self.board = DuinoBot(device)
-        self.__generic_initialization()
+        self._generic_initialization()
 
-    def __generic_initialization(self):
+    def _generic_initialization(self):
         it = util.Iterator(self.board)
         # FIXME: En Python > 2.5 se puede cambiar por it.daemon = True
         # http://stackoverflow.com/questions/17650754
@@ -91,7 +91,6 @@ class Board(object):
         if vel >= 0 and vel <= 100\
                 and not self.__ignore_motors(robotid, vel):
             self.board.send_sysex(1, [int(vel), robotid])
-            self.board.send_sysex(0x71, [int(vel), robotid])
 
     def motor1(self, vel, robotid):
         if vel >= 0 and vel <= 100\
@@ -184,10 +183,10 @@ class Board(object):
     wait = sleep
 
 
-class TCPBoard(object):
+class TCPBoard(Board):
     def __init__(self, robot_ip='192.168.4.1', port=1234):
         self.board = TCPDuinoBot(robot_ip, port)
-        self.__generic_initialization()
+        self._generic_initialization()
 
 
 class Robot(object):
