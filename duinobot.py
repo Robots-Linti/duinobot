@@ -302,8 +302,6 @@ class Robot(object):
                                [self.robotid])
         self.board.board.send_sysex(MOVE_SERVO, data)
 
-from senses import *
-Robot.senses = senses
 
 
 def wait(seconds):

@@ -4,17 +4,17 @@ from distutils.core import setup
 import os.path
 import glob
 
-setup(name='duinobot',
-      version='0.13-7',
+setup(name='duinobot-socks',
+      version='0.13-9',
       description='API en Python para el robot Multiplo N6',
-      author='Joaquin Bogado, Fernando Lopez, Sofia Martin',
+      author='Fernando Lopez, Augusto Guerrero, Sofia Martin',
       author_email='soportelihuen@linti.unlp.edu.ar',
       url='http://lihuen.linti.unlp.edu.ar',
       packages=['duinobot', 'duinobot.pyfirmata'],
       package_dir={'duinobot': '.'},
       data_files=[('usr/share/doc/duinobot/ejemplos',
                    glob.glob(os.path.join('ejemplos', '*.py')))],
-      requires=['pyserial', 'pygame'],
+      requires=['pygame'],
       classifiers=[
           "Environment :: Console",
           "Intended Audience :: Developers",
