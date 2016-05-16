@@ -57,9 +57,9 @@ class Board(object):
         self._last_move[robot_id] = now
         return False
 
-    def __init__(self, device='/dev/ttyUSB0'):
+    def __init__(self, device='/dev/ttyUSB0', debug=False):
         '''Inicializa el dispositivo de conexion con el/los robot/s'''
-        self.board = DuinoBot(device)
+        self.board = DuinoBot(device, debug=debug)
         self._generic_initialization()
 
     def _generic_initialization(self):
@@ -123,7 +123,12 @@ class Board(object):
         self.board.pass_time(time)
 
     def exit(self):
-        self.board.exit()
+        try:
+            self.board.exit()
+        except AttributeError:
+            # Si falla antes de inicializar self.board, entonces no hace falta
+            # hacer nada.
+            pass
 
     def analog(self, ch, samples=1, robotid=0):
         self.board.send_sysex(6, [ch, samples, robotid])
@@ -184,8 +189,8 @@ class Board(object):
 
 
 class TCPBoard(Board):
-    def __init__(self, robot_ip='192.168.4.1', port=1234):
-        self.board = TCPDuinoBot(robot_ip, port)
+    def __init__(self, robot_ip='192.168.4.1', port=1234, debug=False):
+        self.board = TCPDuinoBot(robot_ip, port, debug=debug)
         self._generic_initialization()
 
 
