@@ -24,6 +24,7 @@
 ###############################################################################
 
 from pyfirmata import DuinoBot, TCPDuinoBot, util, SERVO_CONFIG
+from pyfirmata import PIN_COMMANDS, PIN_GET_ANALOG, PIN_GET_DIGITAL
 import time
 import re
 import os
@@ -34,7 +35,6 @@ import itertools
 A0, A1, A2, A3, A4, A5 = range(14, 20)
 MOVE_SERVO = 0x0A
 EXTENDED_PIN_MODE = 0x0B
-
 
 class Board(object):
     MOTOR_DELAY_TB6612 = timedelta(0, 0, 100000)
@@ -131,9 +131,10 @@ class Board(object):
             pass
 
     def analog(self, ch, samples=1, robotid=0):
-        self.board.send_sysex(6, [ch, samples, robotid])
+        ch = ch - A0
+        self.board.send_sysex(PIN_COMMANDS, [PIN_GET_ANALOG, ch, samples, robotid])
         self.board.pass_time(0.04)
-        return self.board.analog_value[robotid]
+        return self.board.pin_analog_value(robotid)[ch]
 
     def battery(self, robotid):
         self.board.send_sysex(6, [6, 1, robotid])
@@ -141,9 +142,9 @@ class Board(object):
         return self.board.analog_value[robotid]*5.0/1024
 
     def digital(self, pin, robotid):
-        self.board.send_sysex(7, [pin, robotid])
+        self.board.send_sysex(PIN_COMMANDS, [PIN_GET_DIGITAL, pin, robotid])
         self.board.pass_time(0.04)
-        return self.board.digital_value[robotid]
+        return self.board.digital_value(robotid)[pin]
 
     def set_pin_mode(self, pin, mode, robotid):
         self.board.send_sysex(EXTENDED_PIN_MODE, [pin, mode, robotid])
