@@ -141,7 +141,7 @@ class Board(object):
         self.board.pass_time(0.04)
         return self.board.analog_value[robotid]*5.0/1024
 
-    def digital(self, pin, robotid):
+    def digital(self, pin, robotid=0):
         self.board.send_sysex(PIN_COMMANDS, [PIN_GET_DIGITAL, pin, robotid])
         self.board.pass_time(0.04)
         return self.board.digital_value(robotid)[pin]
@@ -202,6 +202,12 @@ class Robot(object):
         self.board = board
         self.name = ''
         self.pins = dict()
+
+    def analog(self, pin, samples=1):
+        return self.board.analog(pin, samples, self.robotid)
+
+    def digital(self, pin):
+        return self.board.digital(pin, self.robotid)
 
     # MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
