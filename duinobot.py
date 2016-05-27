@@ -144,7 +144,7 @@ class Board(object):
     def digital(self, pin, robotid=0):
         self.board.send_sysex(PIN_COMMANDS, [PIN_GET_DIGITAL, pin, robotid])
         self.board.pass_time(0.04)
-        return self.board.digital_value(robotid)[pin]
+        return self.board.pin_digital_value(robotid)[pin]
 
     def set_pin_mode(self, pin, mode, robotid):
         self.board.send_sysex(EXTENDED_PIN_MODE, [pin, mode, robotid])
