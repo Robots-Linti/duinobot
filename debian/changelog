@@ -1,3 +1,10 @@
+robot (0.15) unstable; urgency=medium
+
+  * Nuevos mensajes sysex para analog y digital.
+  * Robot.analog() y Robot.digital().
+
+ -- Soporte Lihuen <soportelihuen@linti.unlp.edu.ar>  Fri, 27 May 2016 14:55:40 -0300
+
 robot (0.13+4) unstable; urgency=medium
 
   * Soporte para servomotores.
