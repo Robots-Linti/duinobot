@@ -5,9 +5,9 @@ import os.path
 import glob
 
 setup(name='duinobot-socks',
-      version='0.13-9',
+      version='0.15',
       description='API en Python para el robot Multiplo N6',
-      author='Fernando Lopez, Augusto Guerrero, Sofia Martin',
+      author='Fernando Lopez, Sofia Martin, Augusto Guerrero, Joaquin Bogado',
       author_email='soportelihuen@linti.unlp.edu.ar',
       url='http://lihuen.linti.unlp.edu.ar',
       packages=['duinobot', 'duinobot.pyfirmata'],

@@ -23,18 +23,18 @@
 # If not, see <multiplo.com.ar/soft/Mbq/Lic.Minibloq.ESP.pdf>.
 ###############################################################################
 
-from pyfirmata import DuinoBot, util, SERVO_CONFIG
+from pyfirmata import TCPDuinoBot, util, SERVO_CONFIG
+from pyfirmata import PIN_COMMANDS, PIN_GET_ANALOG, PIN_GET_DIGITAL
 import time
 import re
 import os
 import threading
 from datetime import datetime, timedelta
 import itertools
-import socket
 
 A0, A1, A2, A3, A4, A5 = range(14, 20)
 MOVE_SERVO = 0x0A
-
+EXTENDED_PIN_MODE = 0x0B
 
 class Board(object):
     MOTOR_DELAY_TB6612 = timedelta(0, 0, 100000)
@@ -57,9 +57,11 @@ class Board(object):
         self._last_move[robot_id] = now
         return False
 
-    def __init__(self, device='/dev/ttyUSB0'):
-        '''Inicializa el dispositivo de conexion con el/los robot/s'''
-        self.board = DuinoBot(device)
+    def __init__(self, robot_ip='192.168.4.1', port=1234, debug=False):
+        self.board = TCPDuinoBot(robot_ip, port, debug=debug)
+        self._generic_initialization()
+
+    def _generic_initialization(self):
         it = util.Iterator(self.board)
         # FIXME: En Python > 2.5 se puede cambiar por it.daemon = True
         # http://stackoverflow.com/questions/17650754
@@ -121,22 +123,31 @@ class Board(object):
         self.board.pass_time(time)
 
     def exit(self):
-        self.board.exit()
+        try:
+            self.board.exit()
+        except AttributeError:
+            # Si falla antes de inicializar self.board, entonces no hace falta
+            # hacer nada.
+            pass
 
     def analog(self, ch, samples=1, robotid=0):
-        self.board.send_sysex(6, [ch, samples, robotid])
+        ch = ch - A0
+        self.board.send_sysex(PIN_COMMANDS, [PIN_GET_ANALOG, ch, samples, robotid])
         self.board.pass_time(0.04)
-        return self.board.analog_value[robotid]
+        return self.board.pin_analog_value(robotid)[ch]
 
     def battery(self, robotid):
         self.board.send_sysex(6, [6, 1, robotid])
         self.board.pass_time(0.04)
         return self.board.analog_value[robotid]*5.0/1024
 
-    def digital(self, pin, robotid):
-        self.board.send_sysex(7, [pin, robotid])
+    def digital(self, pin, robotid=0):
+        self.board.send_sysex(PIN_COMMANDS, [PIN_GET_DIGITAL, pin, robotid])
         self.board.pass_time(0.04)
-        return self.board.digital_value[robotid]
+        return self.board.pin_digital_value(robotid)[pin]
+
+    def set_pin_mode(self, pin, mode, robotid):
+        self.board.send_sysex(EXTENDED_PIN_MODE, [pin, mode, robotid])
 
     def beep(self, freq=0, microseconds=0, robotid=0):
         hi = freq >> 7
@@ -178,6 +189,10 @@ class Board(object):
     wait = sleep
 
 
+class TCPBoard(Board):
+    pass
+
+
 class Robot(object):
     def __init__(self, board, robotid=0):
         '''Inicializa el robot y lo asocia con la placa board.'''
@@ -185,6 +200,12 @@ class Robot(object):
         self.board = board
         self.name = ''
         self.pins = dict()
+
+    def analog(self, pin, samples=1):
+        return self.board.analog(pin, samples, self.robotid)
+
+    def digital(self, pin):
+        return self.board.digital(pin, self.robotid)
 
     # MOVIMIENTO
     def forward(self, vel=50, seconds=-1):
