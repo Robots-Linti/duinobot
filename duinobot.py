@@ -1,4 +1,4 @@
-#!/bin/python
+#/bin/python
 # -*- coding: utf-8 -*-
 ###############################################################################
 # duinobot-interactive
@@ -25,6 +25,7 @@
 
 from pyfirmata import DuinoBot, TCPDuinoBot, util, SERVO_CONFIG
 from pyfirmata import PIN_COMMANDS, PIN_GET_ANALOG, PIN_GET_DIGITAL
+from pyfirmata import ANALOG, DIGITAL, PWM, OUTPUT, INPUT
 import time
 import re
 import os
@@ -32,7 +33,7 @@ import threading
 from datetime import datetime, timedelta
 import itertools
 
-A0, A1, A2, A3, A4, A5 = range(14, 20)
+A0, A1, A2, A3, A4, A5, A6 = range(14, 21)
 MOVE_SERVO = 0x0A
 EXTENDED_PIN_MODE = 0x0B
 
@@ -131,15 +132,16 @@ class Board(object):
             pass
 
     def analog(self, ch, samples=1, robotid=0):
+        # PyFirmata espera que el canal de los analógicos sea un número del 0
+        # al 6 (si bien del lado del robot este número se convierte de nuevo a
+        # un número de pin sumandole el valor de la macro A0).
         ch = ch - A0
         self.board.send_sysex(PIN_COMMANDS, [PIN_GET_ANALOG, ch, samples, robotid])
         self.board.pass_time(0.04)
         return self.board.pin_analog_value(robotid)[ch]
 
     def battery(self, robotid):
-        self.board.send_sysex(6, [6, 1, robotid])
-        self.board.pass_time(0.04)
-        return self.board.analog_value[robotid]*5.0/1024
+        return self.analog(A6, 1, robotid) * 5.0 / 1024
 
     def digital(self, pin, robotid=0):
         self.board.send_sysex(PIN_COMMANDS, [PIN_GET_DIGITAL, pin, robotid])
@@ -177,13 +179,13 @@ class Board(object):
         self.board.pass_time(0.02)
 
     def getLine(self, robotid):
-        a = self.analog(18, robotid=robotid)
-        b = self.analog(19, robotid=robotid)
+        a = self.analog(A4, robotid=robotid)
+        b = self.analog(A5, robotid=robotid)
         return (a, b)
 
     def getWheels(self, robotid):
-        a = self.analog(16, robotid=robotid)
-        b = self.analog(17, robotid=robotid)
+        a = self.analog(A1, robotid=robotid)
+        b = self.analog(A2, robotid=robotid)
         return (a, b)
 
     wait = sleep
@@ -202,6 +204,9 @@ class Robot(object):
         self.board = board
         self.name = ''
         self.pins = dict()
+        self.board.set_pin_mode(A4, ANALOG, self.robotid)  # Line
+        self.board.set_pin_mode(A5, ANALOG, self.robotid)  # Line
+        self.board.set_pin_mode(A6, ANALOG, self.robotid)  # Battery
 
     def analog(self, pin, samples=1):
         return self.board.analog(pin, samples, self.robotid)
